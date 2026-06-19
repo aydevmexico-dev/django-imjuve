@@ -1,0 +1,57 @@
+{% extends 'panel/base_admin.html' %}
+{% load static %}
+
+{% block head_title %}Descuentos · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Red de beneficios{% endblock %}
+{% block page_title %}Descuentos en Establecimientos{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Promociones</h2>
+        <span class="card__hint">{{ promociones|length }} convenio(s) · {{ scope_label }}</span>
+    </header>
+    <div class="cards-grid">
+        {% for promo in promociones %}
+        <article class="promo">
+            <div class="promo__logo">
+                {% if promo.company.logo %}
+                    <img src="{{ promo.company.logo.url }}" alt="{{ promo.company.name }}">
+                {% else %}
+                    <span class="promo__initial">{{ promo.company.name|first|upper }}</span>
+                {% endif %}
+            </div>
+            <div class="promo__body">
+                <span class="promo__company">{{ promo.company.name }}</span>
+                <h3 class="promo__name">{{ promo.name }}</h3>
+                <p class="promo__desc">{{ promo.description|truncatechars:90|default:"Sin descripción." }}</p>
+                <div class="promo__foot">
+                    <span class="promo__loc"><span class="ic ic-pin" aria-hidden="true"></span>{{ promo.city.name|default:promo.municipality.name|default:promo.state.name|default:"Nacional" }}</span>
+                    {% if promo.end_date and promo.end_date < today %}
+                        <span class="pill pill--off">Vencida</span>
+                    {% else %}
+                        <span class="pill pill--on">Activa</span>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <p class="empty">No hay promociones en tu alcance.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Empresas participantes</h2>
+        <span class="card__hint">{{ empresas|length }} empresa(s)</span>
+    </header>
+    <div class="chips">
+        {% for c in empresas %}
+        <span class="chip">{{ c.name }}</span>
+        {% empty %}
+        <p class="empty">Aún no hay empresas con convenios en tu región.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

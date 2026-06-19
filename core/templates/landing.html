@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMJUVE - Ecosistema Digital de las Juventudes</title>
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet (OpenStreetMap) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body class="bg-[#F4F4F4] font-sans">
+
+    <!-- 1. CAPA SUPERIOR 1 — Barra del Gobierno Federal (guinda) -->
+    <nav class="bg-[#6A1B29] text-white px-6 py-3 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <span class="font-bold tracking-wider text-sm md:text-base border-r border-white/30 pr-3">Gobierno de México</span>
+            <span class="text-xs text-gray-200 hidden md:inline">Ecosistema Digital Nacional</span>
+        </div>
+        <div class="flex items-center space-x-3 text-sm">
+            <a href="{% url 'accounts:registro' %}" class="border border-white/70 hover:bg-white/10 transition duration-200 py-1.5 px-4 rounded font-semibold">Registrarse</a>
+            <a href="{% url 'accounts:login' %}" class="bg-[#BC955C] hover:bg-[#a37f4c] text-[#6A1B29] font-bold py-1.5 px-4 rounded transition duration-200 shadow">Iniciar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- 2. CAPA SUPERIOR 2 — Banner Institucional (blanco) -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-6">
+            <img src="{% static 'img/Logo_del_Gobierno_de_México_(2024-2030).png' %}"
+                 alt="Gobierno de México" class="h-12 md:h-14 w-auto object-contain">
+            <span class="h-10 w-px bg-[#BC955C]"></span>
+            <img src="{% static 'img/imjuve_logo.png' %}"
+                 alt="Instituto Mexicano de la Juventud (IMJUVE)" class="h-12 md:h-14 w-auto object-contain">
+        </div>
+        <p class="hidden lg:block text-right text-xs text-gray-400 max-w-xs">
+            Plataforma Unificada de Beneficios, Programas y Participación Territorial Juvenil
+        </p>
+    </header>
+
+    <!-- 3. SECCIÓN CENTRAL — Buscador Dinámico -->
+    <section class="max-w-6xl mx-auto mt-8 px-4">
+        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+            <h2 class="text-[#6A1B29] text-xl font-bold mb-4 flex items-center">
+                <span class="inline-block w-2 h-6 bg-[#BC955C] mr-2 rounded"></span>
+                Buscador Nacional de Apoyos y Beneficios
+            </h2>
+
+            <!-- Toggle (radios estilizados como botones activo/inactivo) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <label class="cursor-pointer">
+                    <input type="radio" name="tipo_busqueda" value="programas" checked class="sr-only peer">
+                    <div class="p-4 border-2 border-gray-200 rounded-lg bg-gray-50 transition-all
+                                peer-checked:border-[#6A1B29] peer-checked:bg-[#6A1B29]/5 hover:bg-gray-100">
+                        <p class="font-bold text-[#6A1B29]">Programas y Eventos</p>
+                        <p class="text-xs text-gray-500">Convocatorias y eventos de los 3 órdenes de gobierno e impacto comunitario.</p>
+                    </div>
+                </label>
+                <label class="cursor-pointer">
+                    <input type="radio" name="tipo_busqueda" value="descuentos" class="sr-only peer">
+                    <div class="p-4 border-2 border-gray-200 rounded-lg bg-gray-50 transition-all
+                                peer-checked:border-[#6A1B29] peer-checked:bg-[#6A1B29]/5 hover:bg-gray-100">
+                        <p class="font-bold text-gray-700">Descuentos y Promociones</p>
+                        <p class="text-xs text-gray-500">Beneficios de la Tarjeta Joven con establecimientos y empresas privadas.</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Input de búsqueda unificado -->
+            <div class="relative">
+                <input type="text" id="main-search" autocomplete="off"
+                       placeholder="Buscar por Estado, Municipio, Ciudad, CP o palabra clave del evento..."
+                       class="w-full border-2 border-gray-200 rounded-lg py-3.5 pl-4 pr-12 text-sm
+                              focus:border-[#BC955C] focus:outline-none transition duration-200 shadow-inner">
+                <div class="absolute right-4 top-3.5 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <p id="search-status" class="text-xs text-gray-400 mt-2 h-4"></p>
+        </div>
+    </section>
+
+    <!-- 4. SECCIÓN INFERIOR — Resultados condicionales -->
+    <main class="max-w-6xl mx-auto mt-6 px-4 mb-16">
+
+        <!-- VISTA A: MAPA (Programas y Eventos) -->
+        <div id="vista-mapa" class="block">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <div class="bg-[#F4F4F4] px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Distribución Territorial</span>
+                    <span class="text-xs bg-[#6A1B29] text-white px-2.5 py-0.5 rounded-full font-semibold">
+                        <span class="inline-block w-2 h-2 rounded-full bg-green-400 mr-1"></span>Programa
+                        <span class="inline-block w-2 h-2 rounded-full bg-blue-400 ml-2 mr-1"></span>Evento
+                    </span>
+                </div>
+                <div id="map" class="h-96 w-full bg-slate-200 z-0"></div>
+            </div>
+        </div>
+
+        <!-- VISTA B: TARJETAS (Descuentos y Promociones) -->
+        <div id="vista-descuentos" class="hidden">
+            <h3 class="text-gray-600 text-sm font-semibold uppercase tracking-wider mb-4">
+                Empresas Privadas Participantes — Tarjeta Joven
+            </h3>
+            <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <p id="cards-empty" class="hidden text-center text-gray-400 py-12">Sin promociones que coincidan con tu búsqueda.</p>
+        </div>
+
+    </main>
+
+    <!-- Datasets iniciales (sin filtro) embebidos para el front -->
+    {{ programas|json_script:"data-programas" }}
+    {{ descuentos|json_script:"data-descuentos" }}
+
+    <script src="{% static 'js/landing.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends 'panel/base_admin.html' %}
+
+{% block head_title %}Sesión #{{ sesion.pk }} · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Visor de respuestas{% endblock %}
+{% block page_title %}Detalle de sesión{% endblock %}
+
+{% block content %}
+<a class="back" href="{% url 'panel:encuestas' %}"><span class="ic ic-back" aria-hidden="true"></span>Volver a Encuestas</a>
+
+<section class="card session-head">
+    <div class="session-head__main">
+        <h2>{{ sesion.test.name }}</h2>
+        <p class="session-head__user">{{ sesion.user.get_full_name|default:sesion.user.email }} · <span class="mono">{{ sesion.user.email }}</span></p>
+    </div>
+    <dl class="session-meta">
+        <div><dt>Puntaje</dt><dd class="mono big">{{ sesion.score }}</dd></div>
+        <div><dt>Región</dt><dd>{{ region }}</dd></div>
+        <div><dt>Resuelta</dt><dd>{{ sesion.completed_at|date:"d M Y · H:i" }}</dd></div>
+    </dl>
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Respuestas</h2>
+        <span class="card__hint">{{ sesion.answers.all|length }} pregunta(s) · solo lectura</span>
+    </header>
+    <ol class="answers">
+        {% for a in sesion.answers.all %}
+        <li class="answer">
+            <p class="answer__q">{{ a.question.text }}</p>
+            <span class="answer__type">{{ a.question.get_question_type_display }}</span>
+            {% if a.chosen_choice %}
+                <p class="answer__a {% if a.chosen_choice.is_correct %}is-correct{% endif %}">
+                    <span class="ic {% if a.chosen_choice.is_correct %}ic-check{% else %}ic-dot{% endif %}" aria-hidden="true"></span>
+                    {{ a.chosen_choice.text }}
+                </p>
+            {% elif a.text_answer %}
+                <p class="answer__a answer__a--text">{{ a.text_answer }}</p>
+            {% else %}
+                <p class="answer__a answer__a--empty">Sin respuesta.</p>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li class="empty">Esta sesión no tiene respuestas registradas.</li>
+        {% endfor %}
+    </ol>
+</section>
+{% endblock %}

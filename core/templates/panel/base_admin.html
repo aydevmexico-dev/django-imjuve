@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-theme="imjuve">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}Panel de Administración · IMJUVE{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+<body class="panel" data-nav="{{ active_nav }}">
+
+    <div class="layout">
+
+        <!-- ===================== SIDEBAR ===================== -->
+        <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+            <div class="sidebar__brand">
+                <span class="brand__mark">IM</span>
+                <span class="brand__text">
+                    <strong>IMJUVE</strong>
+                    <small>Panel institucional</small>
+                </span>
+            </div>
+
+            <nav class="nav" aria-label="Secciones">
+                <p class="nav__group">Operación</p>
+                <a class="nav__item {% if active_nav == 'dashboard' %}is-active{% endif %}" href="{% url 'panel:dashboard' %}">
+                    <span class="ic ic-grid" aria-hidden="true"></span><span>Dashboard</span>
+                </a>
+                <a class="nav__item {% if active_nav == 'programas' %}is-active{% endif %}" href="{% url 'panel:programas' %}">
+                    <span class="ic ic-mega" aria-hidden="true"></span><span>Programas y Eventos</span>
+                </a>
+                <a class="nav__item {% if active_nav == 'descuentos' %}is-active{% endif %}" href="{% url 'panel:descuentos' %}">
+                    <span class="ic ic-tag" aria-hidden="true"></span><span>Descuentos</span>
+                </a>
+                <a class="nav__item {% if active_nav == 'encuestas' %}is-active{% endif %}" href="{% url 'panel:encuestas' %}">
+                    <span class="ic ic-poll" aria-hidden="true"></span><span>Encuestas y Tests</span>
+                </a>
+
+                <p class="nav__group">Accesos</p>
+                <a class="nav__item" href="{% url 'landing' %}">
+                    <span class="ic ic-globe" aria-hidden="true"></span><span>Sitio público</span>
+                </a>
+                <a class="nav__item" href="/admin/">
+                    <span class="ic ic-cog" aria-hidden="true"></span><span>Admin Django</span>
+                </a>
+            </nav>
+
+            <div class="sidebar__foot">
+                <div class="who">
+                    <span class="who__avatar">{{ request.user.email|first|upper }}</span>
+                    <span class="who__meta">
+                        <strong>{{ request.user.get_full_name|default:request.user.email }}</strong>
+                        <small>{{ role_label }}</small>
+                    </span>
+                </div>
+                <form method="post" action="{% url 'accounts:logout' %}" class="logout">
+                    {% csrf_token %}
+                    <button type="submit"><span class="ic ic-out" aria-hidden="true"></span>Cerrar sesión</button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="sidebar-scrim" id="sidebarScrim" aria-hidden="true"></div>
+
+        <!-- ===================== MAIN SHELL ===================== -->
+        <div class="shell">
+            <header class="topbar">
+                <button class="iconbtn topbar__burger" id="navToggle" type="button" aria-label="Abrir menú" aria-controls="sidebar">
+                    <span class="ic ic-menu" aria-hidden="true"></span>
+                </button>
+
+                <div class="topbar__title">
+                    <p class="kicker">{% block page_kicker %}Panel de administración{% endblock %}</p>
+                    <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
+
+                <div class="topbar__right">
+                    <span class="scope-badge {% if is_estatal %}scope-badge--estatal{% else %}scope-badge--nacional{% endif %}">
+                        <span class="dot" aria-hidden="true"></span>{{ scope_label }}
+                    </span>
+                    <div class="logos">
+                        <img src="{% static 'img/Logo_del_Gobierno_de_México_(2024-2030).png' %}" alt="Gobierno de México" class="logos__gob">
+                        <span class="logos__sep" aria-hidden="true"></span>
+                        <img src="{% static 'img/imjuve_logo.png' %}" alt="IMJUVE" class="logos__imjuve">
+                    </div>
+                </div>
+            </header>
+
+            {% if messages %}
+            <ul class="flash">
+                {% for m in messages %}<li class="flash__item {{ m.tags }}">{{ m }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+
+            <main class="content">
+                {% block content %}{% endblock %}
+            </main>
+
+            <footer class="pagefoot">
+                <span>Plataforma Digital Nacional para las Juventudes · IMJUVE</span>
+                <span>Sesión: {{ request.user.email }} — {{ scope_label }}</span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{% static 'js/admin_dashboard.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

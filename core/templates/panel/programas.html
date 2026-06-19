@@ -1,0 +1,92 @@
+{% extends 'panel/base_admin.html' %}
+
+{% block head_title %}Programas y Eventos · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Desarrollo y participación{% endblock %}
+{% block page_title %}Programas y Eventos{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Programas sociales</h2>
+        <span class="card__hint">{{ programas|length }} registro(s) · {{ scope_label }}</span>
+    </header>
+    <div class="toolbar">
+        <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
+        <input type="search" class="toolbar__search" placeholder="Buscar programa, institución o municipio…"
+               aria-label="Buscar programas" data-filter-target="#tblProg tbody tr">
+        <div class="chip-filters" role="group" aria-label="Filtrar por estatus">
+            <button type="button" class="chip-filter is-active" data-status-filter="all" data-filter-rows="#tblProg tbody tr">Todos</button>
+            <button type="button" class="chip-filter" data-status-filter="vigente" data-filter-rows="#tblProg tbody tr">Vigentes</button>
+            <button type="button" class="chip-filter" data-status-filter="cerrado" data-filter-rows="#tblProg tbody tr">Cerrados</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="table js-table" id="tblProg">
+            <thead>
+                <tr>
+                    <th data-sort="text">Programa</th>
+                    <th data-sort="text">Institución</th>
+                    <th data-sort="text">Estado</th>
+                    <th data-sort="text">Municipio</th>
+                    <th class="ta-r" data-sort="date">Inicio</th>
+                    <th class="ta-r">Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in programas %}
+                <tr data-status="{% if p.end_date and p.end_date < today %}cerrado{% else %}vigente{% endif %}">
+                    <td class="td-strong">{{ p.name }}</td>
+                    <td>{{ p.organizing_institution|default:"—" }}</td>
+                    <td>{{ p.state.name|default:"Nacional" }}</td>
+                    <td>{{ p.municipality.name|default:"—" }}</td>
+                    <td class="ta-r" data-value="{{ p.start_date|date:'Ymd'|default:'0' }}">{{ p.start_date|date:"d/m/y"|default:"—" }}</td>
+                    <td class="ta-r">
+                        {% if p.end_date and p.end_date < today %}
+                            <span class="pill pill--off">Cerrado</span>
+                        {% else %}
+                            <span class="pill pill--on">Vigente</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty">No hay programas en tu alcance.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Eventos</h2>
+        <span class="card__hint">{{ eventos|length }} registro(s)</span>
+    </header>
+    <div class="toolbar">
+        <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
+        <input type="search" class="toolbar__search" placeholder="Buscar evento o sede…"
+               aria-label="Buscar eventos" data-filter-target="#evGrid .mini">
+    </div>
+    <div class="cards-grid" id="evGrid">
+        {% for e in eventos %}
+        <article class="mini">
+            <div class="mini__top">
+                <h3>{{ e.name }}</h3>
+                {% if e.start_date and e.start_date >= today %}
+                    <span class="pill pill--soon">Próximo</span>
+                {% else %}
+                    <span class="pill pill--off">Pasado</span>
+                {% endif %}
+            </div>
+            <p class="mini__loc"><span class="ic ic-pin" aria-hidden="true"></span>{{ e.city.name|default:e.municipality.name|default:e.state.name|default:"Nacional" }}</p>
+            <p class="mini__desc">{{ e.description|truncatechars:120 }}</p>
+            <footer class="mini__foot">
+                <span>{{ e.organizing_institution|default:"IMJUVE" }}</span>
+                <time>{{ e.start_date|date:"d M Y"|default:"Por definir" }}</time>
+            </footer>
+        </article>
+        {% empty %}
+        <p class="empty">No hay eventos en tu alcance.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

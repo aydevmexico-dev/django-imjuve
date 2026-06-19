@@ -1,0 +1,85 @@
+{% extends 'panel/base_admin.html' %}
+
+{% block head_title %}Encuestas y Tests · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Consulta y evaluación{% endblock %}
+{% block page_title %}Encuestas y Tests{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Catálogo de encuestas</h2>
+        <span class="card__hint">{{ tests|length }} encuesta(s) · {{ scope_label }}</span>
+    </header>
+    <div class="toolbar">
+        <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
+        <input type="search" class="toolbar__search" placeholder="Buscar encuesta o alcance…"
+               aria-label="Buscar encuestas" data-filter-target="#tblTests tbody tr">
+    </div>
+    <div class="table-wrap">
+        <table class="table js-table" id="tblTests">
+            <thead>
+                <tr>
+                    <th data-sort="text">Encuesta / Test</th>
+                    <th data-sort="text">Alcance</th>
+                    <th class="ta-r" data-sort="num">Preguntas</th>
+                    <th class="ta-r" data-sort="num">Respuestas</th>
+                    <th class="ta-r">Estatus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tests %}
+                <tr>
+                    <td class="td-strong">{{ t.name }}</td>
+                    <td>{{ t.state.name|default:"Nacional" }}{% if t.age_min or t.age_max %} · {{ t.age_min|default:0 }}–{{ t.age_max|default:"∞" }} años{% endif %}</td>
+                    <td class="ta-r mono">{{ t.num_preguntas }}</td>
+                    <td class="ta-r mono">{{ t.num_sesiones }}</td>
+                    <td class="ta-r">
+                        {% if t.is_active %}<span class="pill pill--on">Activa</span>{% else %}<span class="pill pill--off">Inactiva</span>{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty">No hay encuestas en tu alcance.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Sesiones de respuesta</h2>
+        <span class="card__hint">Visor con filtro territorial · solo lectura</span>
+    </header>
+    <div class="toolbar">
+        <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
+        <input type="search" class="toolbar__search" placeholder="Buscar por joven o encuesta…"
+               aria-label="Buscar sesiones" data-filter-target="#tblSes tbody tr">
+    </div>
+    <div class="table-wrap">
+        <table class="table js-table" id="tblSes">
+            <thead>
+                <tr>
+                    <th data-sort="text">Joven</th>
+                    <th data-sort="text">Encuesta</th>
+                    <th class="ta-r" data-sort="num">Puntaje</th>
+                    <th class="ta-r" data-sort="date">Resuelta</th>
+                    <th class="ta-r">Respuestas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sesiones %}
+                <tr>
+                    <td class="td-strong">{{ s.user.email }}</td>
+                    <td>{{ s.test.name }}</td>
+                    <td class="ta-r mono" data-value="{{ s.score }}">{{ s.score }}</td>
+                    <td class="ta-r" data-value="{{ s.completed_at|date:'YmdHi' }}">{{ s.completed_at|date:"d M Y · H:i" }}</td>
+                    <td class="ta-r"><a class="btn-ghost" href="{% url 'panel:sesion_detalle' s.pk %}">Abrir visor</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty">No hay sesiones registradas en tu alcance.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

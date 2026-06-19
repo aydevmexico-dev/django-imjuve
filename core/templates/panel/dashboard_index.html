@@ -1,0 +1,108 @@
+{% extends 'panel/base_admin.html' %}
+
+{% block head_title %}Dashboard · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Bienvenido(a) de vuelta{% endblock %}
+{% block page_title %}Panel de control{% endblock %}
+
+{% block content %}
+<section class="kpis" aria-label="Indicadores clave">
+    {% for k in kpis %}
+    <article class="kpi reveal">
+        <span class="kpi__icon ic ic-{{ k.key }}" aria-hidden="true"></span>
+        <p class="kpi__label">{{ k.label }}</p>
+        <p class="kpi__num" data-count="{{ k.value }}">0</p>
+        <p class="kpi__sub">{{ k.sub }}</p>
+    </article>
+    {% endfor %}
+</section>
+
+<section class="grid-2">
+    <article class="card reveal">
+        <header class="card__head">
+            <h2>Encuestas completadas</h2>
+            <span class="card__hint">Últimos 6 meses · {{ trend_total }} en total</span>
+        </header>
+        <div class="trend" data-max="{{ trend_max }}" role="img" aria-label="Sesiones de encuesta por mes en los últimos seis meses">
+            {% for p in trend %}
+            <span class="trend__pt" data-v="{{ p.value }}" data-l="{{ p.label }}"></span>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="card reveal">
+        <header class="card__head">
+            <h2>Distribución por módulo</h2>
+            <span class="card__hint">{{ scope_label }}</span>
+        </header>
+        <div class="donut-wrap">
+            <div class="donut" data-total="{{ chart_total }}" role="img" aria-label="Distribución de registros por módulo">
+                {% for b in chart %}
+                <span class="donut__seg" data-v="{{ b.value }}" data-l="{{ b.label }}"></span>
+                {% endfor %}
+            </div>
+            <ul class="legend" aria-hidden="true"></ul>
+        </div>
+    </article>
+</section>
+
+<section class="grid-2">
+    <article class="card reveal">
+        <header class="card__head">
+            <h2>Encuestas completadas recientemente</h2>
+            <span class="card__hint">{{ recent_sessions|length }} más recientes</span>
+        </header>
+        <div class="toolbar">
+            <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
+            <input type="search" class="toolbar__search" placeholder="Filtrar por joven o encuesta…"
+                   aria-label="Filtrar sesiones" data-filter-target="#tblRecent tbody tr">
+        </div>
+        <div class="table-wrap">
+            <table class="table js-table" id="tblRecent">
+                <thead>
+                    <tr>
+                        <th data-sort="text">Joven</th>
+                        <th data-sort="text">Encuesta</th>
+                        <th class="ta-r" data-sort="num">Puntaje</th>
+                        <th class="ta-r" data-sort="date">Fecha</th>
+                        <th class="ta-r">Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in recent_sessions %}
+                    <tr>
+                        <td class="td-strong">{{ s.user.email }}</td>
+                        <td>{{ s.test.name }}</td>
+                        <td class="ta-r mono" data-value="{{ s.score }}">{{ s.score }}</td>
+                        <td class="ta-r" data-value="{{ s.completed_at|date:'YmdHi' }}">{{ s.completed_at|date:"d M Y · H:i" }}</td>
+                        <td class="ta-r"><a class="btn-ghost" href="{% url 'panel:sesion_detalle' s.pk %}">Ver respuestas</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="empty">Sin sesiones registradas todavía.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="card reveal">
+        <header class="card__head">
+            <h2>Jóvenes recientes</h2>
+            <a class="card__link" href="{% url 'panel:encuestas' %}">Módulo encuestas</a>
+        </header>
+        <ul class="people">
+            {% for j in recent_jovenes %}
+            <li class="people__row">
+                <span class="people__avatar">{{ j.email|first|upper }}</span>
+                <span class="people__meta">
+                    <strong>{{ j.get_full_name|default:j.email }}</strong>
+                    <small>{{ j.email }}</small>
+                </span>
+                <time class="people__date">{{ j.date_joined|date:"d M Y" }}</time>
+            </li>
+            {% empty %}
+            <li class="empty">Aún no hay jóvenes registrados en tu alcance.</li>
+            {% endfor %}
+        </ul>
+    </article>
+</section>
+{% endblock %}

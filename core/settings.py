@@ -30,7 +30,12 @@ DEBUG = True
 
 
 DATABASES = {
-    "default": env.db(),  # Usa una configuración de entorno para la base de datos
+    # Obliga a buscar DATABASE_URL en el sistema de Dokku.
+    # Si no la encuentra (como en tu entorno local), usa la de desarrollo.
+    "default": env.db(
+        var="DATABASE_URL",
+        default="postgresql://imjuve_user:v3sG5RS84UWu@localhost:5432/imjuve_db"
+    ),
 }
 ALLOWED_HOSTS = ['*']
 

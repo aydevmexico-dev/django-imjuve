@@ -120,6 +120,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# CARPETA PARA PRODUCCIÓN: Aquí es donde Dokku recopilará todos los estáticos
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # `core` no es una app instalada, así que su carpeta static/ no la encuentra el
 # AppDirectoriesFinder; la añadimos explícitamente para servir logos/JS de la landing.
 STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']

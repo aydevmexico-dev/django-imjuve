@@ -1,0 +1,13 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}{{ detail.title }} · Portal IMJUVE{% endblock %}
+{% block page_kicker %}{{ detail.kind }}{% endblock %}
+{% block page_title %}{{ detail.title }}{% endblock %}
+{% block search_placeholder %}Buscar…{% endblock %}
+
+{% block content %}
+<a class="back" href="{{ detail.back_url }}"><span class="ic ic-back" aria-hidden="true"></span>Volver</a>
+<section class="card ydetail-card">
+    {% include 'youth/_detail_modal.html' %}
+</section>
+{% endblock %}

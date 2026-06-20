@@ -1,0 +1,54 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}Inicio · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Hola de nuevo{% endblock %}
+{% block page_title %}Tu portal joven{% endblock %}
+{% block search_placeholder %}Busca programas, eventos o descuentos…{% endblock %}
+
+{% block content %}
+<section class="kpis" aria-label="Resumen para tu perfil">
+    {% for k in kpis %}
+    <article class="kpi reveal">
+        <span class="kpi__icon ic ic-{{ k.key }}" aria-hidden="true"></span>
+        <p class="kpi__label">{{ k.label }}</p>
+        <p class="kpi__num" data-count="{{ k.value }}">0</p>
+        <p class="kpi__sub">{{ k.sub }}</p>
+    </article>
+    {% endfor %}
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Explora por categoría</h2>
+        <span class="card__hint">Contenido priorizado para {{ region_label }}</span>
+    </header>
+    <div class="yquick">
+        <a class="yquick__tile" href="{% url 'youth:programas' %}">
+            <span class="yquick__ic ic ic-programas" aria-hidden="true"></span>
+            <strong>Programas</strong><small>Becas y convocatorias vigentes</small>
+        </a>
+        <a class="yquick__tile" href="{% url 'youth:eventos' %}">
+            <span class="yquick__ic ic ic-eventos" aria-hidden="true"></span>
+            <strong>Eventos</strong><small>Actividades y talleres</small>
+        </a>
+        <a class="yquick__tile" href="{% url 'youth:descuentos' %}">
+            <span class="yquick__ic ic ic-tag" aria-hidden="true"></span>
+            <strong>Descuentos</strong><small>Beneficios para ti</small>
+        </a>
+        <a class="yquick__tile" href="{% url 'youth:encuestas' %}">
+            <span class="yquick__ic ic ic-poll" aria-hidden="true"></span>
+            <strong>Encuestas</strong><small>Tu opinión cuenta</small>
+        </a>
+    </div>
+</section>
+
+<section class="card ycta-map">
+    <div class="ycta-map__text">
+        <h2>Encuentra oportunidades en el mapa</h2>
+        <p>Visualiza programas y eventos cerca de ti en el mapa interactivo.</p>
+    </div>
+    <a class="btn-primary" href="{% url 'youth:mapa' %}">
+        <span class="ic ic-pin" aria-hidden="true"></span>Abrir mapa
+    </a>
+</section>
+{% endblock %}

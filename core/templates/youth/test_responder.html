@@ -1,0 +1,47 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}{{ test.name }} · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Responder encuesta{% endblock %}
+{% block page_title %}{{ test.name }}{% endblock %}
+{% block search_placeholder %}Buscar…{% endblock %}
+
+{% block content %}
+<a class="back" href="{% url 'youth:encuestas' %}"><span class="ic ic-back" aria-hidden="true"></span>Volver a encuestas</a>
+
+<section class="card ytest-card">
+    <header class="card__head">
+        <h2>{{ test.name }}</h2>
+        <span class="card__hint">{% if test.organizing_institution %}{{ test.organizing_institution }} · {% endif %}{{ test.questions.count }} pregunta(s)</span>
+    </header>
+
+    {% if is_preview %}
+    <div class="yerror yerror--info">Vista previa: como administrador no puedes enviar respuestas.</div>
+    {% elif not available %}
+    <div class="yerror">Esta encuesta no está disponible para tu perfil (edad, territorio o vigencia).</div>
+    {% endif %}
+
+    <form method="post" class="ytest">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="yerror">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>
+        {% endif %}
+
+        {% for field in form %}
+        <fieldset class="ytest__q">
+            <legend class="ytest__qtext">{{ forloop.counter }}. {{ field.label }}</legend>
+            <div class="ytest__qinput">{{ field }}</div>
+            {% if field.errors %}<ul class="yerror">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </fieldset>
+        {% empty %}
+        <p class="empty">Esta encuesta aún no tiene preguntas.</p>
+        {% endfor %}
+
+        <div class="ytest__actions">
+            <a class="btn-ghost" href="{% url 'youth:encuestas' %}">Cancelar</a>
+            <button class="btn-primary" type="submit"{% if is_preview %} disabled{% endif %}>
+                <span class="ic ic-check" aria-hidden="true"></span>Enviar respuestas
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}

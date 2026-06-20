@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('accounts.urls')),   # /registro/, /login/, /logout/
     path('', include('states.urls')),     # /api/geo/municipios/, /api/geo/colonias/
     path('panel/', include('core.panel_urls')),  # panel de administración personalizado
+    path('portal/', include('core.youth_urls')),  # portal de jóvenes (rol GENERAL)
     path('admin/', admin.site.urls),
 ]
 

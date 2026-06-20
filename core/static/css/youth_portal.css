@@ -1,0 +1,236 @@
+/* ============================================================================
+   IMJUVE · Portal Joven (rol GENERAL)
+   Reutiliza los tokens :root y los componentes base de admin_dashboard.css
+   (sidebar, topbar, .card, .kpi, .btn-*, .pill, .scope-badge). Aquí viven solo
+   las piezas propias del portal: buscador superior, tarjetas de flyer, modal de
+   detalle, carrusel, mapa y formulario de encuesta. Cero estilos inline en HTML.
+   ========================================================================== */
+
+/* ----------------------------- Buscador superior ----------------------- */
+.youth .topbar__title { flex: 0 1 auto; }   /* cede espacio al buscador */
+.topbar__search {
+    flex: 1 1 240px; max-width: 420px; min-width: 0;
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px; border-radius: 999px;
+    background: var(--paper); border: 1px solid var(--line-strong);
+    transition: border-color .18s, box-shadow .18s;
+}
+.topbar__search:focus-within { border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(188, 149, 92, .18); }
+.topbar__search .ic { color: var(--muted); flex: 0 0 auto; }
+.topbar__search-input {
+    flex: 1; min-width: 0; border: 0; background: transparent;
+    font: inherit; font-size: 13.5px; color: var(--ink);
+}
+.topbar__search-input:focus { outline: none; }
+
+/* ------------------------------ Banner preview ------------------------- */
+.preview-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin: 16px 26px 0; padding: 12px 16px;
+    border: 1px solid var(--soon); border-radius: var(--radius-sm);
+    background: var(--soon-bg); color: #7a4e12; font-size: 13.5px;
+}
+.preview-bar .ic { color: var(--soon); flex: 0 0 auto; }
+
+/* ------------------------------ Accesos rápidos ------------------------ */
+.yquick {
+    display: grid; gap: 14px; padding: 20px 22px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.yquick__tile {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 18px; border-radius: var(--radius-sm);
+    background: var(--cream); border: 1px solid var(--line);
+    transition: transform .15s var(--tap), box-shadow .2s var(--tap), border-color .2s;
+}
+.yquick__tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--dorado-300); }
+.yquick__ic { font-size: 1.6rem; color: var(--guinda); }
+.yquick__tile strong { font-size: 15px; color: var(--guinda-900); }
+.yquick__tile small { font-size: 12.5px; color: var(--muted); }
+
+/* CTA al mapa */
+.ycta-map {
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    padding: 22px; flex-wrap: wrap;
+    background: linear-gradient(120deg, var(--guinda-soft), transparent);
+}
+.ycta-map__text h2 { font-size: 18px; color: var(--guinda-900); margin: 0 0 4px; }
+.ycta-map__text p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* ------------------------------- Tarjetas ------------------------------ */
+.ycards {
+    display: grid; gap: 18px; padding: 22px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+.ycards__empty { padding: 0 22px 24px; color: var(--muted); font-style: italic; }
+
+.ycard {
+    display: flex; flex-direction: column; cursor: pointer; overflow: hidden;
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s var(--tap), box-shadow .2s var(--tap), border-color .2s;
+}
+.ycard:hover, .ycard:focus-visible {
+    transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--dorado-300); outline: none;
+}
+.ycard__flyer {
+    position: relative; aspect-ratio: 16 / 10; background: var(--guinda-soft);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.ycard__flyer img { width: 100%; height: 100%; object-fit: cover; }
+.ycard__ph { font-size: 3rem; color: var(--dorado-300); }
+.ycard__kind {
+    position: absolute; top: 10px; left: 10px;
+    padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+    color: #fff; background: var(--guinda); text-transform: uppercase; letter-spacing: .04em;
+}
+.ycard__kind--evento { background: #2563eb; }
+.ycard__kind--descuento { background: var(--dorado-600); }
+.ycard__tag {
+    position: absolute; top: 10px; right: 10px;
+    padding: 4px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 700;
+    background: rgba(255, 255, 255, .92); color: var(--guinda-900);
+}
+.ycard__tag--local { color: var(--ok); }
+.ycard__body { padding: 14px 16px 6px; flex: 1; }
+.ycard__sub { margin: 0 0 2px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--dorado-600); }
+.ycard__title { margin: 0 0 8px; font-size: 16px; line-height: 1.25; color: var(--guinda-900); }
+.ycard__meta { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 12.5px; color: var(--muted); }
+.ycard__meta .ic { font-size: .95rem; color: var(--dorado-600); flex: 0 0 auto; }
+.ycard__cta {
+    display: flex; align-items: center; gap: 6px; padding: 12px 16px;
+    border-top: 1px solid var(--line); font-size: 13px; font-weight: 700; color: var(--guinda);
+}
+.ycard__cta-arrow { transition: transform .18s var(--tap); }
+.ycard:hover .ycard__cta-arrow { transform: translateX(4px); }
+
+/* ------------------------------ Encuestas ------------------------------ */
+.ysurveys { list-style: none; margin: 0; padding: 14px 22px 22px; display: flex; flex-direction: column; gap: 12px; }
+.ysurvey {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--cream);
+}
+.ysurvey__main { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.ysurvey__ic {
+    flex: 0 0 auto; width: 42px; height: 42px; border-radius: 11px; font-size: 1.2rem;
+    display: grid; place-items: center; color: var(--guinda); background: var(--guinda-soft);
+}
+.ysurvey__info h3 { margin: 0; font-size: 15.5px; color: var(--guinda-900); }
+.ysurvey__meta { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+.ysurvey__action { display: flex; align-items: center; gap: 10px; }
+
+/* -------------------------------- Modal -------------------------------- */
+.ymodal { position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.ymodal[hidden] { display: none; }
+.ymodal__backdrop { position: absolute; inset: 0; background: rgba(42, 26, 29, .55); backdrop-filter: blur(2px); }
+.ymodal__panel {
+    position: relative; z-index: 1; width: min(720px, 100%); max-height: 90vh; overflow: auto;
+    background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow-md);
+    animation: ymodal-in .25s var(--tap);
+}
+@keyframes ymodal-in { from { opacity: 0; transform: translateY(12px) scale(.99); } to { opacity: 1; transform: none; } }
+.ymodal__close {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 22px; line-height: 1;
+    background: rgba(255, 255, 255, .9); border: 1px solid var(--line-strong); color: var(--guinda);
+}
+.ymodal__close:hover { background: var(--guinda); color: #fff; }
+body.ymodal-open { overflow: hidden; }
+
+/* ------------------------------- Detalle ------------------------------- */
+.ydetail-card { padding: 0; }
+.ydetail { padding: 26px; }
+.ydetail__head { margin-bottom: 16px; }
+.ydetail__kind {
+    display: inline-block; margin-bottom: 8px; padding: 4px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: #fff; background: var(--guinda);
+}
+.ydetail__kind--evento { background: #2563eb; }
+.ydetail__kind--descuento { background: var(--dorado-600); }
+.ydetail__title { margin: 0; font-family: var(--font-display); font-size: 26px; color: var(--guinda-900); line-height: 1.15; }
+.ydetail__flyer { margin: 0 0 18px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--line); }
+.ydetail__flyer img { display: block; width: 100%; max-height: 360px; object-fit: cover; }
+.ydetail__meta {
+    display: grid; gap: 12px 18px; margin: 0 0 18px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 16px; border-radius: var(--radius-sm); background: var(--cream);
+}
+.ydetail__meta dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--dorado-600); }
+.ydetail__meta dd { margin: 3px 0 0; font-size: 14px; color: var(--ink); }
+.ydetail__section { margin-bottom: 18px; }
+.ydetail__section h3 { margin: 0 0 8px; font-size: 14px; color: var(--guinda-900); }
+.ydetail__desc { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.ydetail__reqs { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7; color: var(--ink); }
+.ydetail__actions { margin-top: 22px; }
+
+/* ------------------------------- Carrusel ------------------------------ */
+.ycarousel { position: relative; border-radius: var(--radius-sm); overflow: hidden; background: var(--off-bg); }
+.ycarousel__track { position: relative; aspect-ratio: 16 / 9; }
+.ycarousel__slide { position: absolute; inset: 0; opacity: 0; transition: opacity .3s var(--tap); }
+.ycarousel__slide.is-active { opacity: 1; }
+.ycarousel__slide img { width: 100%; height: 100%; object-fit: contain; background: #1c1416; }
+.ycarousel__nav {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 22px; line-height: 1;
+    background: rgba(255, 255, 255, .9); border: 1px solid var(--line-strong); color: var(--guinda);
+}
+.ycarousel__nav:hover { background: var(--guinda); color: #fff; }
+.ycarousel__nav--prev { left: 10px; }
+.ycarousel__nav--next { right: 10px; }
+
+/* --------------------------------- Mapa -------------------------------- */
+.ymap-card { padding: 0; }
+.ymap-toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 22px; border-bottom: 1px solid var(--line); }
+.ymap-hint { margin: 0; font-size: 12.5px; color: var(--muted); }
+.ymap { height: 540px; width: 100%; background: var(--cream); }
+.ymap-legend { display: flex; gap: 18px; padding: 14px 22px; font-size: 13px; color: var(--muted); }
+.ymap-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.ldot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--line-strong); }
+.ldot--prog { background: #16a34a; }
+.ldot--ev { background: #2563eb; }
+
+/* -------------------------- Formulario de encuesta --------------------- */
+.ytest-card { padding: 0; }
+.ytest { padding: 22px; }
+.ytest__q { margin: 0 0 18px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--cream); }
+.ytest__qtext { font-size: 15px; font-weight: 600; color: var(--guinda-900); padding: 0; margin: 0 0 12px; }
+.ytest__qinput textarea {
+    width: 100%; padding: 10px 13px; font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    resize: vertical; min-height: 80px; line-height: 1.5;
+}
+.ytest__qinput textarea:focus { outline: none; border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(188, 149, 92, .18); }
+.ytest__qinput ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ytest__qinput li { display: flex; }
+.ytest__qinput label {
+    display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;
+    padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    background: var(--paper); font-size: 14px; transition: border-color .15s, background .15s;
+}
+.ytest__qinput label:hover { border-color: var(--dorado); background: var(--guinda-soft); }
+.ytest__qinput input[type="radio"] { width: 18px; height: 18px; accent-color: var(--guinda); flex: 0 0 auto; }
+.ytest__actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 6px; }
+
+/* --------------------------------- Errores ----------------------------- */
+.yerror {
+    margin: 18px 22px 0; padding: 12px 16px; list-style: none;
+    background: #FBE9E6; border: 1px solid rgba(154, 45, 30, .25); border-radius: var(--radius-sm);
+    color: #9A2D1E; font-size: 13px; font-weight: 600;
+}
+.yerror p, .yerror li { margin: 2px 0; }
+.yerror--info { background: var(--soon-bg); border-color: var(--soon); color: #7a4e12; }
+
+/* ------------------------------ Responsive ----------------------------- */
+@media (max-width: 860px) {
+    .topbar__search { order: 3; flex-basis: 100%; max-width: none; margin-top: 10px; }
+    .topbar { flex-wrap: wrap; }
+}
+@media (max-width: 720px) {
+    .ycards { grid-template-columns: 1fr 1fr; padding: 16px; gap: 14px; }
+    .ymap { height: 420px; }
+    .ytest__actions { flex-direction: column-reverse; align-items: stretch; }
+}
+@media (max-width: 480px) {
+    .ycards { grid-template-columns: 1fr; }
+}

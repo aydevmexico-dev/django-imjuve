@@ -1,0 +1,23 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}Descuentos · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Beneficios para jóvenes{% endblock %}
+{% block page_title %}Descuentos cerca de ti{% endblock %}
+{% block search_placeholder %}Buscar empresa, promoción o lugar…{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Promociones vigentes</h2>
+        <span class="card__hint">{{ cards|length }} resultado(s) · priorizados por {{ region_label }}</span>
+    </header>
+    {% if cards %}
+    <div class="ycards" id="yCards">
+        {% for c in cards %}{% include 'youth/_card.html' with c=c %}{% endfor %}
+    </div>
+    <p class="ycards__empty" id="yCardsEmpty" hidden>Sin coincidencias para tu búsqueda.</p>
+    {% else %}
+    <p class="empty">No hay descuentos disponibles para tu perfil en este momento.</p>
+    {% endif %}
+</section>
+{% endblock %}

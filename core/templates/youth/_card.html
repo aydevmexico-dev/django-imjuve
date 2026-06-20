@@ -1,0 +1,29 @@
+{% comment %}
+Tarjeta de flyer genérica (Programa / Evento / Descuento). Espera `c` (dict armado en la vista
+por `YouthAccessMixin._card`). Carga limpia: solo flyer + datos mínimos; el detalle completo se
+abre en modal al hacer clic (data-detail-url lo consume youth_portal.js).
+{% endcomment %}
+<article class="ycard" data-detail-url="{{ c.detail_url }}" tabindex="0" role="button"
+         aria-label="Ver detalle de {{ c.title }}"
+         data-search="{{ c.title|lower }} {{ c.subtitle|lower }} {{ c.location|lower }}">
+    <div class="ycard__flyer">
+        {% if c.image_url %}
+            <img src="{{ c.image_url }}" alt="Flyer de {{ c.title }}" loading="lazy">
+        {% else %}
+            <span class="ycard__ph ic {% if c.kind == 'evento' %}ic-eventos{% elif c.kind == 'descuento' %}ic-tag{% else %}ic-programas{% endif %}" aria-hidden="true"></span>
+        {% endif %}
+        <span class="ycard__kind ycard__kind--{{ c.kind }}">{{ c.kind|capfirst }}</span>
+        {% if c.is_local %}
+            <span class="ycard__tag ycard__tag--local">Cerca de ti</span>
+        {% elif c.is_national %}
+            <span class="ycard__tag ycard__tag--nat">Nacional</span>
+        {% endif %}
+    </div>
+    <div class="ycard__body">
+        <p class="ycard__sub">{{ c.subtitle }}</p>
+        <h3 class="ycard__title">{{ c.title }}</h3>
+        <p class="ycard__meta"><span class="ic ic-pin" aria-hidden="true"></span>{{ c.location }}</p>
+        <p class="ycard__meta"><span class="ic ic-eventos" aria-hidden="true"></span>{{ c.date_label }}</p>
+    </div>
+    <span class="ycard__cta">Ver detalle <span class="ycard__cta-arrow" aria-hidden="true">→</span></span>
+</article>

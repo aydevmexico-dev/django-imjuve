@@ -1,0 +1,69 @@
+{% comment %}
+Fragmento del detalle (requisitos + galería + enlace externo). Se sirve solo, vía AJAX, al
+abrir el modal de una tarjeta, y también se incrusta en la página completa `detalle.html`
+(fallback sin-JS). Espera el dict `detail` armado por la DetailView.
+{% endcomment %}
+<div class="ydetail">
+    <header class="ydetail__head">
+        <span class="ydetail__kind ydetail__kind--{{ detail.kind|lower }}">{{ detail.kind }}</span>
+        <h2 class="ydetail__title">{{ detail.title }}</h2>
+    </header>
+
+    {% if detail.image_url %}
+    <div class="ydetail__flyer"><img src="{{ detail.image_url }}" alt="Flyer de {{ detail.title }}"></div>
+    {% endif %}
+
+    <dl class="ydetail__meta">
+        {% if detail.institution %}<div><dt>Organiza</dt><dd>{{ detail.institution }}</dd></div>{% endif %}
+        {% if detail.sede %}<div><dt>Sede</dt><dd>{{ detail.sede }}</dd></div>{% endif %}
+        <div><dt>Ubicación</dt><dd>{{ detail.location }}</dd></div>
+        <div><dt>Vigencia</dt><dd>{{ detail.date_label }}</dd></div>
+        {% if detail.age_label %}<div><dt>Edad</dt><dd>{{ detail.age_label }}</dd></div>{% endif %}
+    </dl>
+
+    {% if detail.description %}
+    <div class="ydetail__section">
+        <h3>Descripción</h3>
+        <p class="ydetail__desc">{{ detail.description|linebreaksbr }}</p>
+    </div>
+    {% endif %}
+
+    {% if detail.requirements %}
+    <div class="ydetail__section">
+        <h3>Requisitos</h3>
+        <ul class="ydetail__reqs">{% for r in detail.requirements %}<li>{{ r }}</li>{% endfor %}</ul>
+    </div>
+    {% elif detail.requirements_text %}
+    <div class="ydetail__section">
+        <h3>Requisitos</h3>
+        <p class="ydetail__desc">{{ detail.requirements_text|linebreaksbr }}</p>
+    </div>
+    {% endif %}
+
+    {% if detail.extra_images %}
+    <div class="ydetail__section">
+        <h3>Galería</h3>
+        <div class="ycarousel" data-carousel>
+            <div class="ycarousel__track">
+                {% for img in detail.extra_images %}
+                <figure class="ycarousel__slide{% if forloop.first %} is-active{% endif %}">
+                    <img src="{{ img }}" alt="Imagen {{ forloop.counter }} de {{ detail.title }}" loading="lazy">
+                </figure>
+                {% endfor %}
+            </div>
+            {% if detail.extra_images|length > 1 %}
+            <button type="button" class="ycarousel__nav ycarousel__nav--prev" data-carousel-prev aria-label="Imagen anterior">‹</button>
+            <button type="button" class="ycarousel__nav ycarousel__nav--next" data-carousel-next aria-label="Imagen siguiente">›</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if detail.external_url %}
+    <div class="ydetail__actions">
+        <a class="btn-primary" href="{{ detail.external_url }}" target="_blank" rel="noopener noreferrer" data-external>
+            <span class="ic ic-globe" aria-hidden="true"></span>{{ detail.external_label }}
+        </a>
+    </div>
+    {% endif %}
+</div>

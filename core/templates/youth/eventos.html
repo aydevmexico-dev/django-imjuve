@@ -1,0 +1,23 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}Eventos · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Actividades y talleres{% endblock %}
+{% block page_title %}Eventos próximos{% endblock %}
+{% block search_placeholder %}Buscar evento, sede o lugar…{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Eventos vigentes</h2>
+        <span class="card__hint">{{ cards|length }} resultado(s) · priorizados por {{ region_label }}</span>
+    </header>
+    {% if cards %}
+    <div class="ycards" id="yCards">
+        {% for c in cards %}{% include 'youth/_card.html' with c=c %}{% endfor %}
+    </div>
+    <p class="ycards__empty" id="yCardsEmpty" hidden>Sin coincidencias para tu búsqueda.</p>
+    {% else %}
+    <p class="empty">No hay eventos próximos para tu perfil en este momento.</p>
+    {% endif %}
+</section>
+{% endblock %}

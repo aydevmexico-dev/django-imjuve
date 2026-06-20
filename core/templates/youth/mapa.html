@@ -1,0 +1,38 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}Mapa · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Oportunidades cerca de ti{% endblock %}
+{% block page_title %}Mapa interactivo{% endblock %}
+{% block search_placeholder %}Buscar por estado, municipio o palabra clave…{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+{% endblock %}
+
+{% block content %}
+<section class="card ymap-card" data-map-url="{% url 'youth:mapa_data' %}">
+    <header class="card__head">
+        <h2>Mapa de oportunidades</h2>
+        <span class="card__hint" id="yMapStatus">Cargando…</span>
+    </header>
+    <div class="ymap-toolbar">
+        <div class="chip-filters" role="group" aria-label="Filtrar por categoría">
+            <button type="button" class="chip-filter is-active" data-map-cat="all">Todo</button>
+            <button type="button" class="chip-filter" data-map-cat="programa">Programas</button>
+            <button type="button" class="chip-filter" data-map-cat="evento">Eventos</button>
+        </div>
+        <p class="ymap-hint">Usa el buscador superior para filtrar los pines.</p>
+    </div>
+    <div id="map" class="ymap" role="application" aria-label="Mapa de programas y eventos"></div>
+    <div class="ymap-legend" aria-hidden="true">
+        <span><i class="ldot ldot--prog"></i>Programa</span>
+        <span><i class="ldot ldot--ev"></i>Evento</span>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}

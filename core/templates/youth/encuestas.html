@@ -1,0 +1,42 @@
+{% extends 'youth/base_youth.html' %}
+
+{% block head_title %}Encuestas · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Tu opinión cuenta{% endblock %}
+{% block page_title %}Encuestas disponibles{% endblock %}
+{% block search_placeholder %}Buscar encuesta…{% endblock %}
+
+{% block content %}
+<section class="card">
+    <header class="card__head">
+        <h2>Encuestas para tu perfil</h2>
+        <span class="card__hint">{{ encuestas|length }} disponible(s) · {{ region_label }}</span>
+    </header>
+
+    {% if encuestas %}
+    <ul class="ysurveys" id="yCards">
+        {% for e in encuestas %}
+        <li class="ysurvey" data-search="{{ e.test.name|lower }} {{ e.location|lower }}">
+            <div class="ysurvey__main">
+                <span class="ysurvey__ic ic ic-poll" aria-hidden="true"></span>
+                <div class="ysurvey__info">
+                    <h3>{{ e.test.name }}</h3>
+                    <p class="ysurvey__meta">{{ e.num_preguntas }} pregunta(s) · {{ e.location }}</p>
+                </div>
+            </div>
+            <div class="ysurvey__action">
+                {% if e.answered %}
+                    <span class="pill pill--on">Respondida</span>
+                    <a class="btn-ghost" href="{{ e.responder_url }}">Responder de nuevo</a>
+                {% else %}
+                    <a class="btn-primary btn-primary--sm" href="{{ e.responder_url }}">Responder</a>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <p class="ycards__empty" id="yCardsEmpty" hidden>Sin coincidencias para tu búsqueda.</p>
+    {% else %}
+    <p class="empty">No hay encuestas disponibles para tu perfil ahora mismo.</p>
+    {% endif %}
+</section>
+{% endblock %}

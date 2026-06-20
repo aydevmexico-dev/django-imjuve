@@ -63,6 +63,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,9 +129,17 @@ STATIC_URL = 'static/'
 # CARPETA PARA PRODUCCIÓN: Aquí es donde Dokku recopilará todos los estáticos
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# `core` no es una app instalada, así que su carpeta static/ no la encuentra el
-# AppDirectoriesFinder; la añadimos explícitamente para servir logos/JS de la landing.
 STATICFILES_DIRS = [BASE_DIR / 'core' / 'static']
+
+# Servir estáticos en producción (gunicorn/Dokku) SIN nginx-static: WhiteNoise
+# (su middleware ya está en MIDDLEWARE, justo después de SecurityMiddleware).
+# `CompressedStaticFilesStorage` comprime (gzip/brotli) en `collectstatic` pero NO
+# aplica hashing de manifiesto, así que un `url()` faltante en un CSS de terceros
+# (p. ej. admin_interface) no rompe el build del release.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
 
 # Autenticación: login por email vía sesión (sin DRF/tokens).
 LOGIN_URL = '/login/'

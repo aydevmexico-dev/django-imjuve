@@ -8,7 +8,12 @@
 <section class="card">
     <header class="card__head">
         <h2>Programas sociales</h2>
-        <span class="card__hint">{{ programas|length }} registro(s) · {{ scope_label }}</span>
+        <div class="card__actions">
+            <span class="card__hint">{{ programas|length }} registro(s) · {{ scope_label }}</span>
+            <a class="btn-primary btn-primary--sm" href="{% url 'panel:programa_crear' %}">
+                <span class="ic ic-mega" aria-hidden="true"></span>Nuevo programa
+            </a>
+        </div>
     </header>
     <div class="toolbar">
         <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
@@ -30,6 +35,7 @@
                     <th data-sort="text">Municipio</th>
                     <th class="ta-r" data-sort="date">Inicio</th>
                     <th class="ta-r">Estatus</th>
+                    <th class="ta-r">Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,9 +53,10 @@
                             <span class="pill pill--on">Vigente</span>
                         {% endif %}
                     </td>
+                    <td class="ta-r"><a class="btn-ghost" href="{% url 'panel:programa_editar' p.pk %}">Editar</a></td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6" class="empty">No hay programas en tu alcance.</td></tr>
+                <tr><td colspan="7" class="empty">No hay programas en tu alcance.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -59,7 +66,12 @@
 <section class="card">
     <header class="card__head">
         <h2>Eventos</h2>
-        <span class="card__hint">{{ eventos|length }} registro(s)</span>
+        <div class="card__actions">
+            <span class="card__hint">{{ eventos|length }} registro(s)</span>
+            <a class="btn-primary btn-primary--sm" href="{% url 'panel:evento_crear' %}">
+                <span class="ic ic-eventos" aria-hidden="true"></span>Nuevo evento
+            </a>
+        </div>
     </header>
     <div class="toolbar">
         <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
@@ -77,12 +89,15 @@
                     <span class="pill pill--off">Pasado</span>
                 {% endif %}
             </div>
-            <p class="mini__loc"><span class="ic ic-pin" aria-hidden="true"></span>{{ e.city.name|default:e.municipality.name|default:e.state.name|default:"Nacional" }}</p>
+            <p class="mini__loc"><span class="ic ic-pin" aria-hidden="true"></span>{% if e.city %}{{ e.city.name }}{% elif e.municipality %}{{ e.municipality.name }}{% elif e.state %}{{ e.state.name }}{% else %}Nacional{% endif %}</p>
             <p class="mini__desc">{{ e.description|truncatechars:120 }}</p>
             <footer class="mini__foot">
                 <span>{{ e.organizing_institution|default:"IMJUVE" }}</span>
                 <time>{{ e.start_date|date:"d M Y"|default:"Por definir" }}</time>
             </footer>
+            <div class="row-actions">
+                <a class="btn-ghost" href="{% url 'panel:evento_editar' e.pk %}">Editar</a>
+            </div>
         </article>
         {% empty %}
         <p class="empty">No hay eventos en tu alcance.</p>

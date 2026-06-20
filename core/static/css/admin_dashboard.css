@@ -5,10 +5,10 @@
 
 :root {
     /* Identidad institucional */
-    --guinda: #6A1B29;
-    --guinda-700: #561622;
-    --guinda-900: #3F0F1B;
-    --guinda-soft: rgba(106, 27, 41, .07);
+    --guinda: #B30F34;
+    --guinda-700: #8E0A28;
+    --guinda-900: #6B0A20;
+    --guinda-soft: rgba(179, 15, 52, .07);
     --dorado: #BC955C;
     --dorado-300: #D8BC8C;
     --dorado-600: #A67C45;
@@ -36,8 +36,8 @@
     --sb-collapsed: 78px;
     --radius: 16px;
     --radius-sm: 10px;
-    --shadow-sm: 0 1px 2px rgba(63, 15, 27, .06), 0 2px 6px -2px rgba(63, 15, 27, .07);
-    --shadow-md: 0 14px 38px -16px rgba(63, 15, 27, .28);
+    --shadow-sm: 0 1px 2px rgba(75, 8, 24, .06), 0 2px 6px -2px rgba(75, 8, 24, .07);
+    --shadow-md: 0 14px 38px -16px rgba(75, 8, 24, .28);
     --tap: cubic-bezier(.2, .7, .2, 1);
 
     /* Iconos (máscaras SVG, sin imágenes externas) */
@@ -68,7 +68,7 @@ body.panel {
     background-color: var(--cream);
     background-image:
         radial-gradient(120% 90% at 100% -10%, rgba(188, 149, 92, .18), transparent 55%),
-        radial-gradient(90% 70% at -10% 0%, rgba(106, 27, 41, .06), transparent 50%);
+        radial-gradient(90% 70% at -10% 0%, rgba(179, 15, 52, .06), transparent 50%);
     background-attachment: fixed;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -114,7 +114,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; lett
         linear-gradient(180deg, var(--guinda) 0%, var(--guinda-900) 100%);
     color: #F3E7DC;
     border-right: 1px solid rgba(0, 0, 0, .25);
-    box-shadow: 14px 0 40px -28px rgba(63, 15, 27, .7);
+    box-shadow: 14px 0 40px -28px rgba(75, 8, 24, .7);
     transition: width .28s var(--tap), transform .28s var(--tap);
     z-index: 40;
 }
@@ -357,7 +357,7 @@ body.sidebar-collapsed .shell { margin-left: var(--sb-collapsed); }
 .table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
 .table thead th {
     text-align: left; padding: 13px 22px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--line); background: rgba(106, 27, 41, .03);
+    color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--line); background: rgba(179, 15, 52, .03);
     position: sticky; top: 0;
 }
 .table tbody td { padding: 13px 22px; border-bottom: 1px solid var(--line); vertical-align: middle; }
@@ -378,6 +378,24 @@ body.sidebar-collapsed .shell { margin-left: var(--sb-collapsed); }
     color: var(--guinda); border: 1px solid var(--line-strong); background: var(--paper); transition: all .18s;
 }
 .btn-ghost:hover { background: var(--guinda); color: #fff; border-color: var(--guinda); }
+
+/* Botón de acción primaria (alta) — compartido por listas y formularios. */
+.btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px; border: 1px solid var(--guinda); border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, var(--guinda), var(--guinda-700));
+    color: #fff; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s var(--tap), box-shadow .2s var(--tap), filter .2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); color: #fff; }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary .ic { font-size: 1.05rem; }
+.btn-primary--sm { padding: 8px 15px; font-size: 13px; box-shadow: none; }
+/* Cabecera de tarjeta con acciones (texto + botón Nuevo). */
+.card__actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+/* Fila de acciones por tarjeta (Editar, etc.). */
+.row-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
 
 /* -------------------------- Cards grid / minis -------------------------- */
 .cards-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); padding: 20px 22px; }
@@ -460,7 +478,7 @@ body.nav-open .sidebar-scrim { opacity: 1; visibility: visible; }
     .logos__imjuve { display: none; }
 }
 @media (max-width: 860px) {
-    .sidebar { transform: translateX(-100%); box-shadow: 18px 0 60px -20px rgba(63, 15, 27, .6); }
+    .sidebar { transform: translateX(-100%); box-shadow: 18px 0 60px -20px rgba(75, 8, 24, .6); }
     body.nav-open .sidebar { transform: translateX(0); }
     .shell { margin-left: 0; }
     body.sidebar-collapsed .shell { margin-left: 0; }
@@ -496,7 +514,7 @@ body.nav-open .sidebar-scrim { opacity: 1; visibility: visible; }
 .toolbar {
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     padding: 14px 22px; border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, rgba(106, 27, 41, .03), transparent);
+    background: linear-gradient(180deg, rgba(179, 15, 52, .03), transparent);
 }
 .toolbar__ic { color: var(--muted); font-size: 1.05rem; }
 .toolbar__search {

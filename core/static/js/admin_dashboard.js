@@ -8,7 +8,7 @@
   "use strict";
 
   const SVGNS = "http://www.w3.org/2000/svg";
-  const PALETTE = ["#6A1B29", "#BC955C", "#A67C45", "#8E3B49", "#D8BC8C"];
+  const PALETTE = ["#B30F34", "#BC955C", "#A67C45", "#8E3B49", "#D8BC8C"];
   const body = document.body;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const MOBILE = "(max-width: 860px)";

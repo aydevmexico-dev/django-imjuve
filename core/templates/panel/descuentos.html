@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block head_title %}Descuentos · Panel IMJUVE{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_benefits.css' %}">{% endblock %}
 {% block page_kicker %}Red de beneficios{% endblock %}
 {% block page_title %}Descuentos en Establecimientos{% endblock %}
 
@@ -9,7 +10,12 @@
 <section class="card">
     <header class="card__head">
         <h2>Promociones</h2>
-        <span class="card__hint">{{ promociones|length }} convenio(s) · {{ scope_label }}</span>
+        <div class="card__actions">
+            <span class="card__hint">{{ promociones|length }} convenio(s) · {{ scope_label }}</span>
+            <a class="btn-primary btn-primary--sm" href="{% url 'panel:descuento_crear' %}">
+                <span class="ic ic-tag" aria-hidden="true"></span>Nueva promoción
+            </a>
+        </div>
     </header>
     <div class="cards-grid">
         {% for promo in promociones %}
@@ -26,12 +32,15 @@
                 <h3 class="promo__name">{{ promo.name }}</h3>
                 <p class="promo__desc">{{ promo.description|truncatechars:90|default:"Sin descripción." }}</p>
                 <div class="promo__foot">
-                    <span class="promo__loc"><span class="ic ic-pin" aria-hidden="true"></span>{{ promo.city.name|default:promo.municipality.name|default:promo.state.name|default:"Nacional" }}</span>
+                    <span class="promo__loc"><span class="ic ic-pin" aria-hidden="true"></span>{% if promo.city %}{{ promo.city.name }}{% elif promo.municipality %}{{ promo.municipality.name }}{% elif promo.state %}{{ promo.state.name }}{% else %}Nacional{% endif %}</span>
                     {% if promo.end_date and promo.end_date < today %}
                         <span class="pill pill--off">Vencida</span>
                     {% else %}
                         <span class="pill pill--on">Activa</span>
                     {% endif %}
+                </div>
+                <div class="row-actions">
+                    <a class="btn-ghost" href="{% url 'panel:descuento_editar' promo.pk %}"><span class="ic ic-edit" aria-hidden="true"></span>Editar</a>
                 </div>
             </div>
         </article>
@@ -44,14 +53,33 @@
 <section class="card">
     <header class="card__head">
         <h2>Empresas participantes</h2>
-        <span class="card__hint">{{ empresas|length }} empresa(s)</span>
+        <div class="card__actions">
+            <span class="card__hint">{{ empresas|length }} empresa(s) · {{ scope_label }}</span>
+            <a class="btn-primary btn-primary--sm" href="{% url 'panel:empresa_crear' %}">
+                <span class="ic ic-tag" aria-hidden="true"></span>Nueva empresa
+            </a>
+        </div>
     </header>
-    <div class="chips">
+    <div class="cards-grid">
         {% for c in empresas %}
-        <span class="chip">{{ c.name }}</span>
+        <article class="firm">
+            <div class="firm__logo">
+                {% if c.logo %}<img src="{{ c.logo.url }}" alt="{{ c.name }}">
+                {% else %}<span class="firm__initial">{{ c.name|first|upper }}</span>{% endif %}
+            </div>
+            <div class="firm__body">
+                <h3 class="firm__name">{{ c.name }}</h3>
+                <p class="firm__loc"><span class="ic ic-pin" aria-hidden="true"></span>{{ c.state.name|default:"Nacional" }}</p>
+            </div>
+            <a class="btn-ghost firm__edit" href="{% url 'panel:empresa_editar' c.pk %}" aria-label="Editar {{ c.name }}">
+                <span class="ic ic-edit" aria-hidden="true"></span>Editar
+            </a>
+        </article>
         {% empty %}
-        <p class="empty">Aún no hay empresas con convenios en tu región.</p>
+        <p class="empty">Aún no hay empresas en tu alcance. Crea la primera con “Nueva empresa”.</p>
         {% endfor %}
     </div>
 </section>
 {% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/admin_benefits.js' %}"></script>{% endblock %}

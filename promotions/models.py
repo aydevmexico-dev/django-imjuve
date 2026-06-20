@@ -3,6 +3,11 @@ from states.models import State, Municipality, City
 
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name="Nombre de la Empresa")
+    state = models.ForeignKey(
+        State, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='companies', verbose_name="Estado",
+        help_text="Estado al que pertenece la empresa. Vacío = alcance nacional.",
+    )
     logo = models.ImageField(upload_to='company_logos/', null=True, blank=True, verbose_name="Logo de la Empresa")
     description = models.TextField(verbose_name="Descripción de la Empresa", blank=True, null=True)
 

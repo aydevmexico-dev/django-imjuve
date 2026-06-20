@@ -1,0 +1,138 @@
+/* ============================================================================
+   IMJUVE · Panel — constructor de Encuestas (Preguntas + Opciones)
+   Extiende los tokens de admin_dashboard.css y reutiliza .form-* de admin_forms.css.
+   Aquí viven el lienzo de preguntas (qbuilder), las tarjetas de pregunta (qrow) y
+   el bloque anidado de opciones (choices / crow). Cero estilos inline en HTML.
+   ========================================================================== */
+
+/* ------------------------------ Lienzo --------------------------------- */
+.qbuilder { padding: 22px; }
+.qbuilder__lead {
+    margin: 0 0 18px; font-size: 13.5px; color: var(--muted); line-height: 1.55;
+}
+.qbuilder__lead strong { color: var(--guinda-900); }
+.qbuilder__rows { display: flex; flex-direction: column; gap: 16px; }
+
+/* ----------------------- Tarjeta de pregunta --------------------------- */
+.qrow {
+    position: relative;
+    border: 1px solid var(--line-strong); border-radius: var(--radius);
+    background: var(--paper); box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    animation: qfade .25s var(--tap);
+}
+.qrow.is-removed { display: none; }
+@keyframes qfade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.qrow__head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--guinda-soft), transparent);
+}
+.qrow__num {
+    flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    background: var(--guinda); color: #fff;
+}
+.qrow__title {
+    flex: 1; font-family: var(--font-display); font-size: 15px;
+    font-weight: 600; color: var(--guinda-900);
+}
+.qrow__del {
+    flex: 0 0 auto; width: 32px; height: 32px; border-radius: 9px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--paper);
+    color: var(--guinda); font-size: 20px; line-height: 1;
+    transition: background .18s, color .18s, border-color .18s;
+}
+.qrow__del:hover { background: var(--guinda); color: #fff; border-color: var(--guinda); }
+
+.qrow__body {
+    display: grid; gap: 14px 18px; padding: 18px 16px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+.qrow__body .form-group { gap: 6px; }
+.qrow__delflag { display: none; }   /* el checkbox DELETE se controla con el botón × */
+
+/* --------------------- Bloque de opciones (MC) ------------------------- */
+.choices {
+    display: none;
+    padding: 16px; margin: 0 16px 16px;
+    border: 1px dashed var(--line-strong); border-radius: var(--radius-sm);
+    background: var(--cream);
+}
+.choices.choices--on { display: block; animation: qfade .2s var(--tap); }
+.choices__title {
+    display: flex; align-items: center; gap: 8px; margin: 0 0 12px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--guinda-900);
+}
+.choices__title .ic { font-size: 1rem; color: var(--dorado-600); }
+.choices__rows { display: flex; flex-direction: column; gap: 10px; }
+
+/* ------------------------- Fila de opción ------------------------------ */
+.crow {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--paper);
+}
+.crow.is-removed { display: none; }
+.crow__bullet {
+    flex: 0 0 auto; width: 9px; height: 9px; border-radius: 999px;
+    background: var(--dorado); box-shadow: 0 0 0 3px var(--guinda-soft);
+}
+.crow__field { flex: 1; min-width: 0; }
+.crow__field input[type="text"] {
+    width: 100%; padding: 9px 12px; font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    transition: border-color .18s, box-shadow .18s;
+}
+.crow__field input[type="text"]:focus {
+    outline: none; border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(188, 149, 92, .18);
+}
+.crow__correct {
+    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; user-select: none;
+}
+.crow__correct input[type="checkbox"] {
+    width: 17px; height: 17px; accent-color: var(--guinda); cursor: pointer;
+}
+.crow__delflag { display: none; }
+.crow__del {
+    flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--paper);
+    color: var(--guinda); font-size: 18px; line-height: 1;
+    transition: background .18s, color .18s, border-color .18s;
+}
+.crow__del:hover { background: var(--guinda); color: #fff; border-color: var(--guinda); }
+
+/* --------------------------- Botones add ------------------------------- */
+.choices__add {
+    margin-top: 12px; padding: 7px 14px; cursor: pointer;
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--dorado-600);
+    background: transparent; border: 1px dashed var(--dorado); border-radius: var(--radius-sm);
+    transition: background .18s, color .18s;
+}
+.choices__add:hover { background: var(--guinda-soft); color: var(--guinda); }
+
+.qbuilder__add {
+    margin-top: 18px; padding: 12px 20px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    font: inherit; font-size: 14px; font-weight: 700; color: #fff;
+    background: var(--guinda); border: 0; border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm); transition: background .18s, transform .12s;
+}
+.qbuilder__add:hover { background: var(--guinda-700); }
+.qbuilder__add:active { transform: translateY(1px); }
+.qbuilder__add span { font-size: 1.05rem; line-height: 1; }
+
+/* ------------------------------ Responsive ----------------------------- */
+@media (max-width: 720px) {
+    .qbuilder { padding: 16px; }
+    .qrow__body { grid-template-columns: 1fr; padding: 16px; }
+    .crow { flex-wrap: wrap; }
+    .crow__field { flex: 1 1 100%; order: 1; }
+    .crow__correct { order: 2; }
+    .crow__del { order: 3; margin-left: auto; }
+    .choices { margin: 0 12px 12px; }
+}

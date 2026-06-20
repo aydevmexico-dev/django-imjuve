@@ -1,0 +1,116 @@
+{% extends 'panel/base_admin.html' %}
+{% load static %}
+
+{% block head_title %}{{ form_title }} · Panel IMJUVE{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_forms.css' %}">
+{% for css in extra_css %}<link rel="stylesheet" href="{% static css %}">{% endfor %}{% endblock %}
+
+{% block page_kicker %}{{ entity_kicker }}{% endblock %}
+{% block page_title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+<nav class="crumbs" aria-label="Ruta de navegación">
+    <a href="{% url 'panel:dashboard' %}">Panel</a>
+    <span class="crumbs__sep" aria-hidden="true">›</span>
+    <a href="{{ list_url }}">{{ entity_kicker }}</a>
+    <span class="crumbs__sep" aria-hidden="true">›</span>
+    <span class="crumbs__current">{% if is_edit %}Editar{% else %}Nueva{% endif %}</span>
+</nav>
+
+<section class="card form-card">
+    <header class="card__head">
+        <h2>{{ form_title }}</h2>
+        <span class="card__hint">
+            {% if is_estatal %}Alcance fijo: {{ scope_label }}{% else %}Alcance: {{ scope_label }}{% endif %}
+        </span>
+    </header>
+
+    <form method="post" novalidate
+          data-municipios-url="{{ municipios_url }}"
+          data-ciudades-url="{{ ciudades_url }}">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="form-errors form-errors--top" role="alert">
+            {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+        <ul class="nav-tabs" role="tablist">
+            <li class="nav-tabs__tab is-active" role="tab" tabindex="0"
+                data-tab="datos" aria-selected="true">
+                <span class="ic ic-grid" aria-hidden="true"></span>Datos de la encuesta
+            </li>
+            <li class="nav-tabs__tab" role="tab" tabindex="0"
+                data-tab="preguntas" aria-selected="false">
+                <span class="ic ic-poll" aria-hidden="true"></span>Preguntas
+                <span class="nav-tabs__count" id="qCount"></span>
+            </li>
+        </ul>
+
+        <!-- Pestaña 1 · Datos de la encuesta -->
+        <div class="tab-pane is-active" data-pane="datos" role="tabpanel">
+            <div class="form-grid">
+                {% for field in form.visible_fields %}
+                <div class="form-group{% if field.field.widget.input_type == 'checkbox' %} form-group--check{% endif %}{% if field.errors %} has-error{% endif %}">
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="form-check">
+                            {{ field }}
+                            <label class="form-check__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <label class="form-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}{% if field.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}
+                            {% if field.field.disabled %}<span class="form-lock" title="Bloqueado a tu estado">🔒</span>{% endif %}
+                        </label>
+                        {{ field }}
+                    {% endif %}
+                    {% if field.help_text %}<p class="form-hint">{{ field.help_text }}</p>{% endif %}
+                    {% if field.errors %}
+                    <ul class="form-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pestaña 2 · Preguntas (formset externo) con Opciones anidadas -->
+        <div class="tab-pane" data-pane="preguntas" role="tabpanel">
+            {{ q_formset.management_form }}
+            {% if q_formset.non_form_errors %}
+            <div class="form-errors form-errors--top" role="alert">
+                {% for error in q_formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="qbuilder" id="qBuilder">
+                <p class="qbuilder__lead">Agrega los reactivos de la encuesta. Si una pregunta es de
+                    <strong>Opción Múltiple</strong>, captura sus opciones de respuesta.</p>
+
+                <div class="qbuilder__rows" id="qRows">
+                    {% for qform, cf in pairs %}{% include 'panel/_question_block.html' %}{% endfor %}
+                </div>
+
+                <template id="qEmptyTpl">{% include 'panel/_question_block.html' with qform=empty_question_form cf=empty_choice_formset is_empty=1 %}</template>
+
+                <button type="button" class="qbuilder__add" id="qAdd">
+                    <span aria-hidden="true">+</span> Agregar pregunta
+                </button>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn-ghost" href="{{ list_url }}">Cancelar</a>
+            <button type="submit" class="btn-primary">
+                <span class="ic ic-check" aria-hidden="true"></span>
+                {% if is_edit %}Guardar cambios{% else %}Crear encuesta{% endif %}
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/admin_forms.js' %}"></script>
+{% for js in extra_js %}<script src="{% static js %}"></script>{% endfor %}{% endblock %}

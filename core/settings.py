@@ -74,6 +74,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -140,6 +143,11 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
 }
+
+# Archivos subidos por el usuario (pósters de Programas/Eventos e imágenes adicionales
+# de los formsets). En DEBUG se sirven desde core/urls.py.
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Autenticación: login por email vía sesión (sin DRF/tokens).
 LOGIN_URL = '/login/'

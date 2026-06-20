@@ -1,0 +1,59 @@
+{% comment %}
+Un bloque de Pregunta (Question) con su formset interno de Opciones (Choice).
+Se usa de dos formas:
+  · Filas reales: `{% for qform, cf in pairs %}` (qform es un form del QuestionFormSet,
+    con sus campos ocultos `id`/`DELETE`).
+  · Plantilla vacía: `{% include ... with qform=empty_question_form cf=empty_choice_formset is_empty=1 %}`
+    (qform es un QuestionForm suelto sin `id`/`DELETE`: se imprimen a mano con el
+    token __qprefix__ que admin_surveys.js sustituye al clonar).
+Espera `qform`, `cf` y, opcionalmente, `is_empty`.
+{% endcomment %}
+<div class="qrow" data-qrow>
+    <div class="qrow__head">
+        <span class="qrow__num" data-qnum aria-hidden="true"></span>
+        <span class="qrow__title">Pregunta</span>
+        <button type="button" class="qrow__del" data-qdel aria-label="Quitar pregunta">&times;</button>
+    </div>
+
+    {% for hidden in qform.hidden_fields %}{{ hidden }}{% endfor %}
+    {% if is_empty %}
+    <input type="hidden" name="questions-__qprefix__-id" id="id_questions-__qprefix__-id">
+    {% endif %}
+
+    <div class="qrow__body">
+        <div class="form-group qrow__text{% if qform.text.errors %} has-error{% endif %}">
+            <label class="form-label" for="{{ qform.text.id_for_label }}">Texto de la pregunta</label>
+            {{ qform.text }}
+            {% if qform.text.errors %}<ul class="form-errors">{% for e in qform.text.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group qrow__type{% if qform.question_type.errors %} has-error{% endif %}">
+            <label class="form-label" for="{{ qform.question_type.id_for_label }}">Tipo de pregunta</label>
+            {{ qform.question_type }}
+            {% if qform.question_type.errors %}<ul class="form-errors">{% for e in qform.question_type.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    {% if is_empty %}
+    <span class="qrow__delflag">
+        <input type="checkbox" name="questions-__qprefix__-DELETE" id="id_questions-__qprefix__-DELETE">
+    </span>
+    {% else %}
+    <span class="qrow__delflag">{{ qform.DELETE }}</span>
+    {% endif %}
+
+    {# Opciones: solo relevantes para Opción Múltiple (las muestra/oculta el JS según el tipo). #}
+    <div class="choices" data-choices>
+        {{ cf.management_form }}
+        <p class="choices__title"><span class="ic ic-poll" aria-hidden="true"></span>Opciones de respuesta</p>
+        {% if cf.non_form_errors %}
+        <div class="form-errors form-errors--top" role="alert">
+            {% for e in cf.non_form_errors %}<p>{{ e }}</p>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="choices__rows">
+            {% for choice in cf %}{% include 'panel/_choice_row.html' with choice=choice %}{% endfor %}
+        </div>
+        <template class="choices__tpl">{% include 'panel/_choice_row.html' with choice=cf.empty_form %}</template>
+        <button type="button" class="choices__add" data-cadd>+ Agregar opción</button>
+    </div>
+</div>

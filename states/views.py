@@ -2,7 +2,7 @@
 
 from django.http import JsonResponse
 
-from .models import Location, Municipality
+from .models import City, Location, Municipality
 
 # Tope defensivo: una colonia/municipio puede tener muchos asentamientos.
 RESULT_LIMIT = 500
@@ -15,6 +15,20 @@ def municipios(request):
     if state_id:
         qs = Municipality.objects.filter(state_id=state_id).order_by("name")
     data = [{"id": m.id, "name": m.name} for m in qs[:RESULT_LIMIT]]
+    return JsonResponse({"results": data})
+
+
+def ciudades(request):
+    """GET /api/geo/ciudades/?state=<id> -> [{id, name}] (drill-down Estado -> Ciudad).
+
+    La Ciudad cuelga del Estado (no del Municipio), por eso filtra por `state`. Lo usa la
+    cascada de los formularios del panel para el SUPER (el ESTATAL ya las trae pre-filtradas).
+    """
+    state_id = request.GET.get("state")
+    qs = City.objects.none()
+    if state_id:
+        qs = City.objects.filter(state_id=state_id).order_by("name")
+    data = [{"id": c.id, "name": c.name} for c in qs[:RESULT_LIMIT]]
     return JsonResponse({"results": data})
 
 

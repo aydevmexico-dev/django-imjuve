@@ -1,0 +1,17 @@
+{% comment %}
+Una fila de formset inline (Requisito o Imagen). Se usa tanto para las filas existentes
+(`{% for sub in formset %}`) como para el `empty_form` dentro de <template> (clonado por JS).
+Espera la variable `sub` en el contexto.
+{% endcomment %}
+<div class="formset__row">
+    {% for hidden in sub.hidden_fields %}{{ hidden }}{% endfor %}
+    {% for f in sub.visible_fields %}{% if f.name != 'DELETE' %}
+    <div class="formset__field{% if f.errors %} has-error{% endif %}">
+        <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+        {{ f }}
+        {% if f.errors %}<ul class="form-errors">{% for e in f.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {% endif %}{% endfor %}
+    <span class="formset__delflag">{{ sub.DELETE }}</span>
+    <button type="button" class="formset__remove" aria-label="Quitar fila">&times;</button>
+</div>

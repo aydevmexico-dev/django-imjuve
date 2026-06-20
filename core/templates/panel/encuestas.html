@@ -8,7 +8,12 @@
 <section class="card">
     <header class="card__head">
         <h2>Catálogo de encuestas</h2>
-        <span class="card__hint">{{ tests|length }} encuesta(s) · {{ scope_label }}</span>
+        <div class="card__actions">
+            <span class="card__hint">{{ tests|length }} encuesta(s) · {{ scope_label }}</span>
+            <a class="btn-primary btn-primary--sm" href="{% url 'panel:encuesta_crear' %}">
+                <span class="ic ic-poll" aria-hidden="true"></span>Nueva encuesta
+            </a>
+        </div>
     </header>
     <div class="toolbar">
         <span class="toolbar__ic ic ic-search" aria-hidden="true"></span>
@@ -24,6 +29,7 @@
                     <th class="ta-r" data-sort="num">Preguntas</th>
                     <th class="ta-r" data-sort="num">Respuestas</th>
                     <th class="ta-r">Estatus</th>
+                    <th class="ta-r">Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,9 +42,10 @@
                     <td class="ta-r">
                         {% if t.is_active %}<span class="pill pill--on">Activa</span>{% else %}<span class="pill pill--off">Inactiva</span>{% endif %}
                     </td>
+                    <td class="ta-r"><a class="btn-ghost" href="{% url 'panel:encuesta_editar' t.pk %}">Editar</a></td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="5" class="empty">No hay encuestas en tu alcance.</td></tr>
+                <tr><td colspan="6" class="empty">No hay encuestas en tu alcance.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

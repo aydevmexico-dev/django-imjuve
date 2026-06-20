@@ -8,5 +8,6 @@ app_name = "states"
 
 urlpatterns = [
     path("api/geo/municipios/", views.municipios, name="municipios"),
+    path("api/geo/ciudades/", views.ciudades, name="ciudades"),
     path("api/geo/colonias/", views.colonias, name="colonias"),
 ]

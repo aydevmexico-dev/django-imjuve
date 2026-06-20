@@ -1,0 +1,115 @@
+{% extends 'panel/base_admin.html' %}
+{% load static %}
+
+{% block head_title %}{{ form_title }} · Panel IMJUVE{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin_forms.css' %}">
+{% for css in extra_css %}<link rel="stylesheet" href="{% static css %}">{% endfor %}{% endblock %}
+
+{% block page_kicker %}{{ entity_kicker }}{% endblock %}
+{% block page_title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+<nav class="crumbs" aria-label="Ruta de navegación">
+    <a href="{% url 'panel:dashboard' %}">Panel</a>
+    <span class="crumbs__sep" aria-hidden="true">›</span>
+    <a href="{{ list_url }}">{{ entity_kicker }}</a>
+    <span class="crumbs__sep" aria-hidden="true">›</span>
+    <span class="crumbs__current">{% if is_edit %}Editar{% else %}Nuevo{% endif %}</span>
+</nav>
+
+<section class="card form-card">
+    <header class="card__head">
+        <h2>{{ form_title }}</h2>
+        <span class="card__hint">
+            {% if is_estatal %}Alcance fijo: {{ scope_label }}{% else %}Alcance: {{ scope_label }}{% endif %}
+        </span>
+    </header>
+
+    <form method="post" enctype="multipart/form-data" novalidate
+          data-municipios-url="{{ municipios_url }}"
+          data-ciudades-url="{{ ciudades_url }}">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="form-errors form-errors--top" role="alert">
+            {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+        {% if inline_tabs %}
+        <ul class="nav-tabs" role="tablist">
+            <li class="nav-tabs__tab is-active" role="tab" tabindex="0"
+                data-tab="datos" aria-selected="true">
+                <span class="ic ic-grid" aria-hidden="true"></span>Datos Generales
+            </li>
+            {% for tab in inline_tabs %}
+            <li class="nav-tabs__tab" role="tab" tabindex="0"
+                data-tab="{{ tab.key }}" aria-selected="false">
+                {{ tab.label }}<span class="nav-tabs__count" data-count-for="{{ tab.key }}"></span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Pestaña 1 · Datos Generales -->
+        <div class="tab-pane is-active" data-pane="datos" role="tabpanel">
+            <div class="form-grid">
+                {% for field in form.visible_fields %}
+                <div class="form-group{% if field.field.widget.input_type == 'checkbox' %} form-group--check{% endif %}{% if field.errors %} has-error{% endif %}">
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        <div class="form-check">
+                            {{ field }}
+                            <label class="form-check__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <label class="form-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}{% if field.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}
+                            {% if field.field.disabled %}<span class="form-lock" title="Bloqueado a tu estado">🔒</span>{% endif %}
+                        </label>
+                        {{ field }}
+                    {% endif %}
+                    {% if field.help_text %}<p class="form-hint">{{ field.help_text }}</p>{% endif %}
+                    {% if field.errors %}
+                    <ul class="form-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pestañas de formsets (Requisitos · Imágenes Adicionales) -->
+        {% for tab in inline_tabs %}
+        <div class="tab-pane" data-pane="{{ tab.key }}" role="tabpanel">
+            {{ tab.formset.management_form }}
+            {% if tab.formset.non_form_errors %}
+            <div class="form-errors form-errors--top" role="alert">
+                {% for error in tab.formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+            </div>
+            {% endif %}
+            <div class="formset" data-prefix="{{ tab.key }}"{% if tab.is_file %} data-file="1"{% endif %}>
+                <div class="formset__rows">
+                    {% for sub in tab.formset %}{% include 'panel/_formset_row.html' %}{% endfor %}
+                </div>
+                <template class="formset__empty">{% include 'panel/_formset_row.html' with sub=tab.formset.empty_form %}</template>
+                <button type="button" class="formset__add btn-ghost" data-prefix="{{ tab.key }}">
+                    + Agregar {{ tab.label|lower }}
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <a class="btn-ghost" href="{{ list_url }}">Cancelar</a>
+            <button type="submit" class="btn-primary">
+                <span class="ic ic-check" aria-hidden="true"></span>
+                {% if is_edit %}Guardar cambios{% else %}Crear registro{% endif %}
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/admin_forms.js' %}"></script>
+{% for js in extra_js %}<script src="{% static js %}"></script>{% endfor %}{% endblock %}

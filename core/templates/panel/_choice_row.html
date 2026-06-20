@@ -1,0 +1,19 @@
+{% comment %}
+Una fila de Opción (Choice) dentro del formset interno de una pregunta MC.
+Se usa para las opciones existentes (`{% for choice in cf %}`) y para el
+`empty_form` dentro de <template> (clonado por admin_surveys.js, token __prefix__).
+Espera la variable `choice` (un form del ChoiceFormSet).
+{% endcomment %}
+<div class="crow" data-crow>
+    {% for hidden in choice.hidden_fields %}{{ hidden }}{% endfor %}
+    <span class="crow__bullet" aria-hidden="true"></span>
+    <div class="crow__field{% if choice.text.errors %} has-error{% endif %}">
+        {{ choice.text }}
+        {% if choice.text.errors %}<ul class="form-errors">{% for e in choice.text.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <label class="crow__correct" title="Marcar como respuesta correcta">
+        {{ choice.is_correct }}<span>Correcta</span>
+    </label>
+    <span class="crow__delflag">{{ choice.DELETE }}</span>
+    <button type="button" class="crow__del" data-cdel aria-label="Quitar opción">&times;</button>
+</div>

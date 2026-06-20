@@ -1,0 +1,239 @@
+/* ============================================================================
+   IMJUVE · Panel — formularios de alta/edición
+   Extiende los tokens :root de admin_dashboard.css (guinda/dorado). Sin estilos
+   inline en las plantillas: aquí viven breadcrumb, pestañas, campos y botones.
+   ========================================================================== */
+
+/* ------------------------------ Breadcrumb ------------------------------ */
+.crumbs {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 14px; font-size: 13px; color: var(--muted);
+}
+.crumbs a { color: var(--dorado-600); font-weight: 600; }
+.crumbs a:hover { color: var(--guinda); text-decoration: underline; }
+.crumbs__sep { color: var(--line-strong); }
+.crumbs__current { color: var(--ink); font-weight: 600; }
+
+/* -------------------------------- Tabs ---------------------------------- */
+.formtabs {
+    display: flex; gap: 4px; flex-wrap: wrap;
+    margin-bottom: 18px; border-bottom: 1px solid var(--line);
+}
+.formtabs__tab {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 11px 18px; margin-bottom: -1px;
+    font-size: 13.5px; font-weight: 600; color: var(--muted);
+    border-bottom: 2.5px solid transparent;
+    transition: color .18s, border-color .18s;
+}
+.formtabs__tab .ic { font-size: 1rem; }
+.formtabs__tab:hover { color: var(--guinda); }
+.formtabs__tab.is-active { color: var(--guinda-900); border-bottom-color: var(--dorado); }
+
+/* ------------------------------ Form card ------------------------------- */
+.form-card { margin-bottom: 18px; }
+
+.form-grid {
+    display: grid; gap: 16px 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 22px;
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+/* Campos que ocupan toda la fila: textarea, multiselección y checkboxes. */
+.form-group--check,
+.form-group:has(.form-textarea),
+.form-group:has(select[multiple]) { grid-column: 1 / -1; }
+
+.form-label {
+    font-size: 13px; font-weight: 600; color: var(--guinda-900); letter-spacing: .01em;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.req { color: var(--guinda); font-weight: 700; }
+.form-lock { font-size: 11px; }
+.form-hint { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+/* ------------------------------- Campos --------------------------------- */
+.form-input, .form-select, .form-textarea {
+    width: 100%; padding: 10px 13px;
+    font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    transition: border-color .18s, box-shadow .18s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none; border-color: var(--dorado);
+    box-shadow: 0 0 0 3px rgba(188, 149, 92, .18);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+.form-textarea { resize: vertical; min-height: 92px; line-height: 1.5; }
+
+/* Selects con chevron dorado (sin flecha nativa) */
+.form-select:not([multiple]) {
+    -webkit-appearance: none; appearance: none;
+    padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A67C45' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 13px center; background-size: 14px;
+}
+select[multiple].form-select { min-height: 132px; padding: 8px; }
+select[multiple].form-select option { padding: 6px 9px; border-radius: 6px; }
+
+/* Campo de archivo (imágenes/posters) */
+.form-input[type="file"] { padding: 8px 10px; background: var(--cream); cursor: pointer; }
+
+/* Campo bloqueado (Estado del administrador estatal) */
+.form-input:disabled, .form-select:disabled {
+    background: var(--off-bg); color: var(--muted); cursor: not-allowed;
+    border-style: dashed;
+}
+
+/* Checkbox (p. ej. ¿Activo?) */
+.form-check { display: flex; align-items: center; gap: 11px; padding: 6px 0; }
+.form-check input[type="checkbox"] {
+    width: 19px; height: 19px; flex: 0 0 auto; accent-color: var(--guinda); cursor: pointer;
+}
+.form-check__label { font-size: 14px; font-weight: 600; color: var(--guinda-900); cursor: pointer; }
+
+/* -------------------------------- Errores ------------------------------- */
+.form-errors { margin: 4px 0 0; padding: 0; list-style: none; }
+.form-errors li, .form-errors p { margin: 2px 0; color: #9A2D1E; font-size: 12.5px; font-weight: 600; }
+.form-errors--top {
+    margin: 18px 22px 0; padding: 12px 16px;
+    background: #FBE9E6; border: 1px solid rgba(154, 45, 30, .25); border-radius: var(--radius-sm);
+}
+.has-error .form-input, .has-error .form-select, .has-error .form-textarea {
+    border-color: #C9483A; box-shadow: 0 0 0 3px rgba(201, 72, 58, .12);
+}
+
+/* ------------------------------- Acciones ------------------------------- */
+.form-actions {
+    display: flex; justify-content: flex-end; align-items: center; gap: 12px;
+    padding: 18px 22px; border-top: 1px solid var(--line);
+    background: linear-gradient(0deg, rgba(179, 15, 52, .03), transparent);
+}
+.form-actions .btn-ghost { padding: 11px 20px; border-radius: var(--radius-sm); font-size: 14px; }
+/* `.btn-primary` vive en admin_dashboard.css (compartido por listas y formularios). */
+
+/* ------------------------------ Responsive ------------------------------ */
+@media (max-width: 720px) {
+    .form-grid { grid-template-columns: 1fr; padding: 18px; }
+    .form-actions { flex-direction: column-reverse; align-items: stretch; }
+    .form-actions .btn-ghost, .btn-primary { justify-content: center; text-align: center; }
+}
+
+/* ============================================================================
+   v2 · Pestañas internas, formsets inline y multiselect de Ciudades
+   ========================================================================== */
+
+/* ------------------------------- Pestañas ------------------------------- */
+.nav-tabs {
+    display: flex; flex-wrap: wrap; gap: 4px; list-style: none;
+    margin: 0; padding: 0 22px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--guinda-soft), transparent);
+}
+.nav-tabs__tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 18px; margin-bottom: -1px; cursor: pointer;
+    font-size: 13.5px; font-weight: 600; color: var(--muted);
+    border-bottom: 2.5px solid transparent;
+    transition: color .18s, border-color .18s, background .18s;
+}
+.nav-tabs__tab .ic { font-size: 1rem; }
+.nav-tabs__tab:hover { color: var(--guinda); }
+.nav-tabs__tab.is-active { color: var(--guinda-900); border-bottom-color: var(--dorado); background: var(--paper); }
+.nav-tabs__count {
+    min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    background: var(--guinda-soft); color: var(--guinda);
+}
+.nav-tabs__count:empty { display: none; }
+
+.tab-pane { display: none; }
+.tab-pane.is-active { display: block; animation: fadein .25s var(--tap); }
+@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------- Formsets ------------------------------- */
+.formset { padding: 22px; }
+.formset__rows { display: flex; flex-direction: column; gap: 12px; }
+.formset__row {
+    display: flex; align-items: flex-end; gap: 14px;
+    padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--cream);
+}
+.formset__row.is-removed { display: none; }
+.formset__field { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.formset__field label { font-size: 12.5px; font-weight: 600; color: var(--guinda-900); }
+.formset__field input[type="text"],
+.formset__field input[type="url"],
+.formset__field input[type="number"],
+.formset__field textarea,
+.formset__field select {
+    width: 100%; padding: 9px 12px; font: inherit; font-size: 14px; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    transition: border-color .18s, box-shadow .18s;
+}
+.formset__field input:focus, .formset__field textarea:focus, .formset__field select:focus {
+    outline: none; border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(188, 149, 92, .18);
+}
+.formset__field input[type="file"] {
+    font-size: 13px; padding: 7px; background: var(--paper); cursor: pointer;
+    border: 1px dashed var(--line-strong); border-radius: var(--radius-sm);
+}
+.formset__delflag { display: none; }   /* el checkbox DELETE se controla con el botón × */
+.formset__remove {
+    flex: 0 0 auto; width: 34px; height: 34px; border-radius: 9px; cursor: pointer;
+    border: 1px solid var(--line-strong); background: var(--paper);
+    color: var(--guinda); font-size: 20px; line-height: 1;
+    transition: background .18s, color .18s, border-color .18s;
+}
+.formset__remove:hover { background: var(--guinda); color: #fff; border-color: var(--guinda); }
+.formset__add { margin-top: 14px; cursor: pointer; }
+
+/* ---------------------- Multiselect de Ciudades ------------------------- */
+/* El <select multiple> nativo se oculta; el componente JS lo refleja y lo mantiene en sync. */
+.ms { position: relative; }
+.ms select[multiple] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.ms__control {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    min-height: 44px; padding: 7px 36px 7px 10px; cursor: text;
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    transition: border-color .18s, box-shadow .18s;
+}
+.ms.is-open .ms__control { border-color: var(--dorado); box-shadow: 0 0 0 3px rgba(188, 149, 92, .18); }
+.ms__control::after {
+    content: ""; position: absolute; right: 13px; top: 50%; width: 14px; height: 14px;
+    transform: translateY(-50%); pointer-events: none; color: var(--dorado-600); background: currentColor;
+    -webkit-mask: var(--i-chev) center / contain no-repeat; mask: var(--i-chev) center / contain no-repeat;
+}
+.ms__chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 11px;
+    border-radius: 999px; font-size: 12.5px; font-weight: 600; background: var(--guinda); color: #fff;
+}
+.ms__chip-x { cursor: pointer; font-size: 15px; line-height: 1; opacity: .85; }
+.ms__chip-x:hover { opacity: 1; }
+.ms__ph { color: var(--muted); font-size: 13.5px; }
+.ms__menu {
+    position: absolute; z-index: 50; left: 0; right: 0; top: calc(100% + 6px);
+    max-height: 260px; overflow: auto; display: none;
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+}
+.ms.is-open .ms__menu { display: block; }
+.ms__search {
+    width: 100%; padding: 10px 12px; border: 0; border-bottom: 1px solid var(--line);
+    font: inherit; font-size: 13.5px; color: var(--ink); position: sticky; top: 0; background: var(--paper);
+}
+.ms__search:focus { outline: none; }
+.ms__opt {
+    display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer;
+    font-size: 14px; transition: background .12s;
+}
+.ms__opt:hover { background: var(--guinda-soft); }
+.ms__opt input { width: 17px; height: 17px; accent-color: var(--guinda); }
+.ms__opt.is-hidden { display: none; }
+.ms__empty { padding: 14px 12px; color: var(--muted); font-style: italic; font-size: 13px; }
+
+@media (max-width: 720px) {
+    .formset__row { flex-direction: column; align-items: stretch; }
+    .formset__remove { align-self: flex-end; }
+    .nav-tabs { padding: 0 12px; }
+}

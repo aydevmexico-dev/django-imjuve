@@ -5,14 +5,25 @@ from django.shortcuts import render
 
 from states.models import State
 
-from core.services import search_descuentos, search_programas_eventos
+from core.services import (
+    destacados_convocatorias,
+    search_descuentos,
+    search_programas_eventos,
+)
 
 
 def landing(request):
-    """Landing en `/` con los dos datasets iniciales (sin filtro) embebidos para el front."""
+    """Landing en `/`.
+
+    Alimenta SIMULTÁNEAMENTE las tres zonas dinámicas de la página:
+      · `programas`  → pines del mapa (y dataset inicial del buscador), embebido vía json_script.
+      · `descuentos` → tarjetas de la vista alterna del buscador, embebido vía json_script.
+      · `destacados` → feed lateral "Convocatorias de última hora", renderizado en servidor.
+    """
     context = {
         "programas": search_programas_eventos(""),
         "descuentos": search_descuentos(""),
+        "destacados": destacados_convocatorias(limit=6),
         "states": State.objects.order_by("name"),
     }
     return render(request, "landing.html", context)

@@ -237,3 +237,33 @@ select[multiple].form-select option { padding: 6px 9px; border-radius: 6px; }
     .formset__remove { align-self: flex-end; }
     .nav-tabs { padding: 0 12px; }
 }
+
+/* ============================================================================
+   RWD unificado · Breakpoint móvil (≤768px) — sin tocar la identidad visual.
+   Objetivos: una sola columna, campos a ancho completo sin auto-zoom de iOS y
+   pestañas que se deslizan en lugar de cortarse. Unidades relativas (rem/vh).
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Formulario a 1 columna en teléfono (en escritorio sigue a 2 columnas). */
+    .form-grid { grid-template-columns: 1fr; }
+    .form-actions { flex-direction: column-reverse; align-items: stretch; }
+
+    /* 1rem = 16px: evita que Safari iOS haga zoom automático al enfocar un campo.
+       No altera el tamaño en escritorio (la regla solo aplica ≤768px). */
+    .form-input, .form-select, .form-textarea,
+    .formset__field input, .formset__field textarea, .formset__field select,
+    .ms__search { font-size: 1rem; }
+
+    /* Pestañas internas: una fila deslizable en vez de envolverse y encimarse. */
+    .formtabs, .nav-tabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .formtabs::-webkit-scrollbar, .nav-tabs::-webkit-scrollbar { display: none; }
+    .formtabs__tab, .nav-tabs__tab { white-space: nowrap; flex: 0 0 auto; }
+
+    /* El desplegable del multiselect nunca debe rebasar el alto del viewport. */
+    .ms__menu { max-height: 50vh; }
+}
+
+/* Tabletas (769–1024px): el formulario mantiene 2 columnas cómodas. */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

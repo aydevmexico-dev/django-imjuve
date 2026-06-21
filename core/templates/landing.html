@@ -4,120 +4,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMJUVE - Ecosistema Digital de las Juventudes</title>
+    <title>IMJUVE · Ecosistema Digital de las Juventudes</title>
+    <meta name="description" content="Encuentra programas, eventos y descuentos para las juventudes de México. Buscador nacional y mapa territorial de apoyos del IMJUVE.">
 
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Leaflet (OpenStreetMap) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-</head>
-<body class="bg-[#F4F4F4] font-sans">
 
-    <!-- 1. CAPA SUPERIOR 1 — Barra del Gobierno Federal (guinda) -->
-    <nav class="bg-[#6A1B29] text-white px-6 py-3 flex justify-between items-center shadow-md">
-        <div class="flex items-center space-x-3">
-            <span class="font-bold tracking-wider text-sm md:text-base border-r border-white/30 pr-3">Gobierno de México</span>
-            <span class="text-xs text-gray-200 hidden md:inline">Ecosistema Digital Nacional</span>
+    <link rel="stylesheet" href="{% static 'css/landing_public.css' %}">
+</head>
+<body class="lp">
+    <a class="lp-skip" href="#contenido">Saltar al contenido</a>
+
+    <!-- 1 · Barra del Gobierno Federal -->
+    <div class="lp-fed">
+        <div class="lp-shell lp-fed__row">
+            <span class="lp-fed__brand">Gobierno de México<small>Ecosistema Digital de las Juventudes</small></span>
+            <nav class="lp-fed__links" aria-label="Accesos del gobierno">
+                <a href="#">Trámites</a>
+                <a href="#">Blog</a>
+                <a href="#">Multimedia</a>
+                <a href="#">Transparencia</a>
+            </nav>
+            <div class="lp-fed__cta">
+                <a class="lp-btn-line" href="{% url 'accounts:registro' %}">Crear cuenta</a>
+                <a class="lp-btn-gold" href="{% url 'accounts:login' %}">Entrar</a>
+            </div>
         </div>
-        <div class="flex items-center space-x-3 text-sm">
-            <a href="{% url 'accounts:registro' %}" class="border border-white/70 hover:bg-white/10 transition duration-200 py-1.5 px-4 rounded font-semibold">Registrarse</a>
-            <a href="{% url 'accounts:login' %}" class="bg-[#BC955C] hover:bg-[#a37f4c] text-[#6A1B29] font-bold py-1.5 px-4 rounded transition duration-200 shadow">Iniciar Sesión</a>
+    </div>
+
+    <!-- 2 · Banner institucional (logos) -->
+    <header class="lp-head">
+        <div class="lp-shell lp-head__row">
+            <div class="lp-head__logos">
+                <img src="{% static 'img/logo_gobierno_mexico.png' %}" alt="Gobierno de México">
+                <span class="lp-head__sep" aria-hidden="true"></span>
+                <img src="{% static 'img/imjuve_logo.png' %}" alt="Instituto Mexicano de la Juventud">
+            </div>
+            <p class="lp-head__tag">Plataforma unificada de beneficios, programas y participación territorial juvenil.</p>
+        </div>
+    </header>
+
+    <!-- 3 · Navegación institucional guinda -->
+    <nav class="lp-nav" aria-label="Secciones del portal">
+        <div class="lp-shell lp-nav__row">
+            <a href="#contenido" aria-current="page">Inicio</a>
+            <a href="#buscador">Programas</a>
+            <a href="#buscador">Eventos</a>
+            <a href="#buscador">Descuentos</a>
+            <a href="#territorio">Mapa</a>
+            <a href="#">Conoce tus derechos</a>
         </div>
     </nav>
 
-    <!-- 2. CAPA SUPERIOR 2 — Banner Institucional (blanco) -->
-    <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-6">
-            <img src="{% static 'img/logo_gobierno_mexico.png' %}"
-                 alt="Gobierno de México" class="h-12 md:h-14 w-auto object-contain">
-            <span class="h-10 w-px bg-[#BC955C]"></span>
-            <img src="{% static 'img/imjuve_logo.png' %}"
-                 alt="Instituto Mexicano de la Juventud (IMJUVE)" class="h-12 md:h-14 w-auto object-contain">
-        </div>
-        <p class="hidden lg:block text-right text-xs text-gray-400 max-w-xs">
-            Plataforma Unificada de Beneficios, Programas y Participación Territorial Juvenil
-        </p>
-    </header>
+    <!-- 4 · Cuerpo: hero + buscador + aside de enlaces -->
+    <main id="contenido">
+        <section class="lp-body">
+            <div class="lp-shell lp-grid">
+                <div class="lp-main">
+                    <p class="lp-hero__kicker">Una sola puerta de acceso</p>
+                    <h1 class="lp-hero__title">Apoyos, becas y descuentos para las juventudes de México</h1>
+                    <p class="lp-hero__lead">Busca convocatorias y eventos por tu estado o municipio, y descubre los beneficios de la Tarjeta Joven cerca de ti.</p>
 
-    <!-- 3. SECCIÓN CENTRAL — Buscador Dinámico -->
-    <section class="max-w-6xl mx-auto mt-8 px-4">
-        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-            <h2 class="text-[#6A1B29] text-xl font-bold mb-4 flex items-center">
-                <span class="inline-block w-2 h-6 bg-[#BC955C] mr-2 rounded"></span>
-                Buscador Nacional de Apoyos y Beneficios
-            </h2>
+                    <!-- Buscador nacional -->
+                    <div class="lp-search" id="buscador">
+                        <div class="lp-search__inner">
+                            <h2 class="lp-search__h">Buscador nacional de apoyos</h2>
 
-            <!-- Toggle (radios estilizados como botones activo/inactivo) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <label class="cursor-pointer">
-                    <input type="radio" name="tipo_busqueda" value="programas" checked class="sr-only peer">
-                    <div class="p-4 border-2 border-gray-200 rounded-lg bg-gray-50 transition-all
-                                peer-checked:border-[#6A1B29] peer-checked:bg-[#6A1B29]/5 hover:bg-gray-100">
-                        <p class="font-bold text-[#6A1B29]">Programas y Eventos</p>
-                        <p class="text-xs text-gray-500">Convocatorias y eventos de los 3 órdenes de gobierno e impacto comunitario.</p>
+                            <div class="lp-tabs" role="radiogroup" aria-label="Tipo de búsqueda">
+                                <label class="lp-tab">
+                                    <input type="radio" name="tipo_busqueda" value="programas" checked>
+                                    <span class="lp-tab__face">
+                                        <span class="lp-tab__title">Programas y eventos</span>
+                                        <span class="lp-tab__desc">Convocatorias de los tres órdenes de gobierno e impacto comunitario.</span>
+                                    </span>
+                                </label>
+                                <label class="lp-tab">
+                                    <input type="radio" name="tipo_busqueda" value="descuentos">
+                                    <span class="lp-tab__face">
+                                        <span class="lp-tab__title">Descuentos y promociones</span>
+                                        <span class="lp-tab__desc">Beneficios de la Tarjeta Joven con empresas aliadas.</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="lp-field">
+                                <input type="search" id="lp-search-input" autocomplete="off"
+                                       aria-label="Buscar apoyos"
+                                       placeholder="Busca por estado, municipio, ciudad, C.P. o palabra clave…">
+                                <span class="lp-field__ic" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                </span>
+                            </div>
+                            <p class="lp-status" id="lp-search-status" role="status" aria-live="polite"></p>
+                        </div>
                     </div>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="tipo_busqueda" value="descuentos" class="sr-only peer">
-                    <div class="p-4 border-2 border-gray-200 rounded-lg bg-gray-50 transition-all
-                                peer-checked:border-[#6A1B29] peer-checked:bg-[#6A1B29]/5 hover:bg-gray-100">
-                        <p class="font-bold text-gray-700">Descuentos y Promociones</p>
-                        <p class="text-xs text-gray-500">Beneficios de la Tarjeta Joven con establecimientos y empresas privadas.</p>
+
+                    <!-- Carrusel de banners promocionales -->
+                    <section class="lp-promo" aria-label="Avisos destacados" aria-roledescription="carrusel">
+                        <div class="lp-promo__track" id="lp-promo-track" tabindex="0">
+                            <article class="lp-promo__slide">
+                                <span class="lp-promo__tag">Hasta el 30 jun</span>
+                                <div class="lp-promo__txt">
+                                    <h3>Registra tu línea celular</h3>
+                                    <p>Cumple con el padrón nacional antes de que cierre el plazo. Solo necesitas tu CURP.</p>
+                                </div>
+                            </article>
+                            <article class="lp-promo__slide">
+                                <span class="lp-promo__tag">Tarjeta Joven</span>
+                                <div class="lp-promo__txt">
+                                    <h3>Activa tus descuentos en minutos</h3>
+                                    <p>Crea tu cuenta y obtén beneficios con empresas aliadas en todo el país.</p>
+                                </div>
+                            </article>
+                            <article class="lp-promo__slide">
+                                <span class="lp-promo__tag">Convocatoria abierta</span>
+                                <div class="lp-promo__txt">
+                                    <h3>Jóvenes Construyendo el Futuro</h3>
+                                    <p>Capacítate en un centro de trabajo y recibe un apoyo mensual. Revisa los requisitos.</p>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="lp-promo__dots" id="lp-promo-dots" role="tablist" aria-label="Ir al aviso"></div>
+                    </section>
+                </div>
+
+                <!-- Aside: enlaces de interés -->
+                <aside class="lp-aside" aria-label="Enlaces de interés">
+                    <div class="lp-panel">
+                        <p class="lp-panel__h">Enlaces de interés</p>
+                        <ul class="lp-links">
+                            <li><a href="#">Contacto y atención <span class="arrow" aria-hidden="true">→</span></a></li>
+                            <li><a href="#">Registro de empresas aliadas <span class="arrow" aria-hidden="true">→</span></a></li>
+                            <li><a href="#">Conoce tus derechos <span class="arrow" aria-hidden="true">→</span></a></li>
+                            <li><a href="#">Preguntas frecuentes <span class="arrow" aria-hidden="true">→</span></a></li>
+                        </ul>
                     </div>
-                </label>
+                    <div class="lp-panel">
+                        <p class="lp-panel__h">Tu cuenta joven</p>
+                        <ul class="lp-links">
+                            <li><a href="{% url 'accounts:registro' %}">Crear cuenta gratuita <span class="arrow" aria-hidden="true">→</span></a></li>
+                            <li><a href="{% url 'accounts:login' %}">Iniciar sesión <span class="arrow" aria-hidden="true">→</span></a></li>
+                        </ul>
+                    </div>
+                </aside>
             </div>
+        </section>
 
-            <!-- Input de búsqueda unificado -->
-            <div class="relative">
-                <input type="text" id="main-search" autocomplete="off"
-                       placeholder="Buscar por Estado, Municipio, Ciudad, CP o palabra clave del evento..."
-                       class="w-full border-2 border-gray-200 rounded-lg py-3.5 pl-4 pr-12 text-sm
-                              focus:border-[#BC955C] focus:outline-none transition duration-200 shadow-inner">
-                <div class="absolute right-4 top-3.5 text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+        <!-- 5 · Territorio: mapa + feed de convocatorias -->
+        <section class="lp-territory" id="territorio">
+            <div class="lp-shell lp-map-grid">
+                <div class="lp-map-card">
+                    <div class="lp-map-card__bar">
+                        <span class="lp-eyebrow">Distribución territorial</span>
+                        <span class="lp-legend"><span><i class="prog"></i>Programa</span><span><i class="evt"></i>Evento</span></span>
+                    </div>
+                    <div id="lp-map"></div>
+                </div>
+
+                <div class="lp-map-card lp-feed">
+                    <div class="lp-feed__h">
+                        <strong>Convocatorias de última hora</strong>
+                        <small>{{ destacados|length }} activas</small>
+                    </div>
+                    <ul class="lp-feed__list">
+                        {% for c in destacados %}
+                        <li>
+                            <a class="lp-conv" href="{% url 'accounts:login' %}">
+                                <span class="lp-conv__kind">{{ c.kind }}</span>
+                                <p class="lp-conv__title">{{ c.name }}</p>
+                                <span class="lp-conv__meta">
+                                    <span class="lp-conv__loc">📍 {{ c.location }}</span>
+                                    {% if c.days_left is None %}
+                                        <span class="lp-deadline lp-deadline--open">Vigencia abierta</span>
+                                    {% elif c.days_left <= 7 %}
+                                        <span class="lp-deadline lp-deadline--soon">Cierra en {{ c.days_left }} día{{ c.days_left|pluralize }}</span>
+                                    {% else %}
+                                        <span class="lp-deadline lp-deadline--ok">Cierra el {{ c.end_date }}</span>
+                                    {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li class="lp-feed__empty">No hay convocatorias con cierre próximo. Vuelve pronto.</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-            <p id="search-status" class="text-xs text-gray-400 mt-2 h-4"></p>
-        </div>
-    </section>
+        </section>
 
-    <!-- 4. SECCIÓN INFERIOR — Resultados condicionales -->
-    <main class="max-w-6xl mx-auto mt-6 px-4 mb-16">
-
-        <!-- VISTA A: MAPA (Programas y Eventos) -->
-        <div id="vista-mapa" class="block">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-                <div class="bg-[#F4F4F4] px-6 py-3 border-b border-gray-200 flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Distribución Territorial</span>
-                    <span class="text-xs bg-[#6A1B29] text-white px-2.5 py-0.5 rounded-full font-semibold">
-                        <span class="inline-block w-2 h-2 rounded-full bg-green-400 mr-1"></span>Programa
-                        <span class="inline-block w-2 h-2 rounded-full bg-blue-400 ml-2 mr-1"></span>Evento
-                    </span>
-                </div>
-                <div id="map" class="h-96 w-full bg-slate-200 z-0"></div>
+        <!-- 6 · Descuentos (alterna con el mapa según el buscador) -->
+        <section class="lp-discounts is-hidden" id="lp-discounts">
+            <div class="lp-shell">
+                <h3 class="lp-discounts__h">Empresas aliadas · Tarjeta Joven</h3>
+                <div class="lp-cards" id="lp-cards"></div>
+                <p class="lp-feed__empty" id="lp-cards-empty" hidden>Sin promociones que coincidan con tu búsqueda.</p>
             </div>
-        </div>
-
-        <!-- VISTA B: TARJETAS (Descuentos y Promociones) -->
-        <div id="vista-descuentos" class="hidden">
-            <h3 class="text-gray-600 text-sm font-semibold uppercase tracking-wider mb-4">
-                Empresas Privadas Participantes — Tarjeta Joven
-            </h3>
-            <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <p id="cards-empty" class="hidden text-center text-gray-400 py-12">Sin promociones que coincidan con tu búsqueda.</p>
-        </div>
-
+        </section>
     </main>
 
-    <!-- Datasets iniciales (sin filtro) embebidos para el front -->
+    <!-- 7 · Pie institucional -->
+    <footer class="lp-foot">
+        <div class="lp-shell lp-foot__grid">
+            <div class="lp-foot__brand">
+                <strong>IMJUVE</strong>
+                <p>Instituto Mexicano de la Juventud. Coordinamos los apoyos, programas y beneficios para las personas jóvenes de México.</p>
+            </div>
+            <div>
+                <h4>Trámites y servicios</h4>
+                <ul>
+                    <li><a href="#">Programas</a></li>
+                    <li><a href="#">Eventos</a></li>
+                    <li><a href="#">Tarjeta Joven</a></li>
+                    <li><a href="#">Empresas aliadas</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Transparencia</h4>
+                <ul>
+                    <li><a href="#">Protección de Datos Personales</a></li>
+                    <li><a href="#">Aviso de privacidad</a></li>
+                    <li><a href="#">Transparencia</a></li>
+                    <li><a href="#">Marco normativo</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contacto</h4>
+                <ul>
+                    <li><a href="#">Centro de atención</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Multimedia</a></li>
+                    <li><a href="#">Mapa del sitio</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="lp-shell lp-foot__bar">
+            <span>Plataforma Digital Nacional para las Juventudes · IMJUVE</span>
+            <span>Estados Unidos Mexicanos · {% now "Y" %}</span>
+        </div>
+    </footer>
+
     {{ programas|json_script:"data-programas" }}
     {{ descuentos|json_script:"data-descuentos" }}
 
-    <script src="{% static 'js/landing.js' %}"></script>
+    <script defer src="{% static 'js/landing_public.js' %}"></script>
 </body>
 </html>

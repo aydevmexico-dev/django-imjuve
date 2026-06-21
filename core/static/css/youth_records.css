@@ -214,3 +214,17 @@
     .rcard__actions { flex-direction: column; }
     .rlist__item { flex-wrap: wrap; }
 }
+
+/* ============================================================================
+   RWD unificado · Expediente Digital. En móvil las pestañas internas se deslizan
+   (no se envuelven) y la rejilla del perfil baja a una sola columna. rem/vh.
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Perfil a 1 columna en teléfono (2 columnas en tableta, 3 en escritorio). */
+    .rprofile__grid { grid-template-columns: 1fr; }
+
+    /* Pestañas Mi Perfil · Guardados · Encuestas · Actividad: fila deslizable. */
+    .rtabs { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .rtabs::-webkit-scrollbar { display: none; }
+    .rtab { white-space: nowrap; flex: 0 0 auto; }
+}

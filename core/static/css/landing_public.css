@@ -1,0 +1,366 @@
+/* ============================================================================
+   IMJUVE · Landing pública — Ecosistema Digital de las Juventudes
+   Paleta institucional estricta (guinda / dorado / crema). Sin estilos inline.
+   Firma visual: greca escalonada en oro a baja opacidad que viste los laterales.
+   Todas las clases llevan el prefijo `lp-` para no colisionar con otros estilos.
+   ========================================================================== */
+
+:root {
+    --guinda: #B30F34;
+    --guinda-700: #8E0A28;
+    --guinda-900: #6B0A20;
+    --guinda-soft: rgba(179, 15, 52, .07);
+    --dorado: #BC955C;
+    --dorado-600: #A67C45;
+    --dorado-300: #D8BC8C;
+    --crema: #F5EFE6;
+    --paper: #FFFDF9;
+    --ink: #2A1A1D;
+    --muted: #847069;
+    --line: #E8DDCF;
+    --line-strong: #DCCDB8;
+    --ok: #2E7D54;
+    --soon: #B5701A;
+
+    --ui: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+    --maxw: 1280px;
+    --radius: 16px;
+    --radius-sm: 11px;
+    --shadow-sm: 0 1px 2px rgba(42, 26, 29, .06), 0 8px 22px rgba(42, 26, 29, .05);
+    --shadow-md: 0 10px 34px rgba(42, 26, 29, .12);
+    --tap: cubic-bezier(.2, .7, .3, 1);
+
+    /* Greca escalonada (cenefa prehispánica) — SVG data-URI ultraligero (~0.3 KB) */
+    --greca: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23BC955C' stroke-width='5' stroke-opacity='0.5'%3E%3Cpath d='M-10 70 L10 70 L10 50 L30 50 L30 30 L50 30 L50 10 L70 10 L70 -10'/%3E%3Cpath d='M10 90 L30 90 L30 70 L50 70 L50 50 L70 50 L70 30 L90 30 L90 10'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body.lp {
+    margin: 0;
+    font-family: var(--ui);
+    color: var(--ink);
+    line-height: 1.5;
+    background-color: var(--crema);
+}
+/* Greca en una capa fija al ~3% de opacidad: viste los huecos laterales sin competir con
+   el texto del hero (las tarjetas opacas la tapan; solo asoma por crema y gutters). */
+body.lp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--greca);
+    background-size: 80px 80px;
+    opacity: .055;
+}
+
+.lp img { max-width: 100%; display: block; }
+.lp a { color: inherit; text-decoration: none; }
+.lp :focus-visible { outline: 3px solid var(--dorado); outline-offset: 2px; border-radius: 4px; }
+
+.lp-skip {
+    position: absolute; left: -999px; top: 0; z-index: 100;
+    background: var(--guinda); color: #fff; padding: 10px 16px; border-radius: 0 0 8px 0;
+}
+.lp-skip:focus { left: 0; }
+
+.lp-shell { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); }
+
+/* ----------------------------------------------------------------- Federal bar */
+.lp-fed {
+    background: var(--guinda-900);
+    color: #fff;
+    font-size: 13px;
+}
+.lp-fed__row {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 46px; flex-wrap: wrap;
+}
+.lp-fed__brand { font-weight: 700; letter-spacing: .04em; }
+.lp-fed__brand small {
+    font-weight: 500; color: var(--dorado-300); margin-left: 12px; padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, .25);
+}
+.lp-fed__links { display: flex; gap: 4px; flex-wrap: wrap; }
+.lp-fed__links a { padding: 5px 10px; border-radius: 7px; color: rgba(255, 255, 255, .82); transition: background .18s, color .18s; }
+.lp-fed__links a:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+.lp-fed__cta { display: flex; gap: 10px; align-items: center; }
+.lp-btn-line { border: 1px solid rgba(255, 255, 255, .65); padding: 6px 14px; border-radius: 8px; font-weight: 600; transition: background .18s, border-color .18s, transform .08s; }
+.lp-btn-line:hover { background: rgba(255, 255, 255, .14); border-color: #fff; }
+.lp-btn-line:active { background: rgba(255, 255, 255, .24); transform: translateY(1px); }
+.lp-btn-gold { background: var(--dorado); color: var(--guinda-900); padding: 6px 14px; border-radius: 8px; font-weight: 700; transition: background .18s, transform .08s; }
+.lp-btn-gold:hover { background: var(--dorado-300); }
+.lp-btn-gold:active { background: var(--dorado-600); color: #fff; transform: translateY(1px); }
+
+/* ----------------------------------------------------------------- Header logos */
+.lp-head { background: var(--paper); border-bottom: 1px solid var(--line); }
+.lp-head__row {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    padding: 16px 0; flex-wrap: wrap;
+}
+.lp-head__logos { display: flex; align-items: center; gap: 22px; }
+.lp-head__logos img { height: 52px; width: auto; object-fit: contain; }
+.lp-head__sep { width: 1px; height: 40px; background: var(--dorado); }
+.lp-head__tag { max-width: 320px; text-align: right; font-size: 12.5px; color: var(--muted); }
+
+/* ----------------------------------------------------------------- Guinda nav */
+.lp-nav { background: var(--guinda); color: #fff; box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 40; }
+.lp-nav__row { display: flex; gap: 2px; flex-wrap: wrap; align-items: stretch; }
+.lp-nav a {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 16px; font-weight: 600; font-size: 14px; color: rgba(255, 255, 255, .88);
+    border-bottom: 3px solid transparent; transition: background .18s, color .18s, border-color .18s;
+}
+.lp-nav a:hover { background: var(--guinda-700); color: #fff; }
+.lp-nav a[aria-current="page"] { color: #fff; border-bottom-color: var(--dorado); }
+
+/* ----------------------------------------------------------------- Hero + body grid */
+.lp-body { padding: clamp(28px, 4vw, 44px) 0 2.5rem; }
+.lp-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+.lp-hero__kicker {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--dorado-600); margin: 0 0 8px;
+}
+.lp-hero__title {
+    font-family: var(--display); font-weight: 600; font-optical-sizing: auto;
+    font-size: clamp(1.9rem, 1rem + 2.6vw, 3rem); line-height: 1.06; letter-spacing: -.01em;
+    color: var(--guinda-900); margin: 0 0 10px; text-wrap: balance;
+}
+.lp-hero__lead { color: var(--muted); max-width: 52ch; margin: 0 0 1.75rem; font-size: 15.5px; }
+
+/* ----------------------------------------------------------------- Search card */
+.lp-search {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+    border-top: 3px solid var(--guinda);
+}
+.lp-search__inner { padding: clamp(22px, 3vw, 30px); }
+.lp-search__h {
+    display: flex; align-items: center; gap: 10px; margin: 0 0 16px;
+    font-size: 17px; color: var(--guinda-900); font-weight: 700;
+}
+.lp-search__h::before { content: ""; width: 7px; height: 24px; border-radius: 3px; background: var(--dorado); }
+
+.lp-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; align-items: stretch; }
+.lp-tab { display: flex; position: relative; cursor: pointer; }
+.lp-tab input { position: absolute; opacity: 0; pointer-events: none; }
+/* La cara es un bloque flex en columna: SIN `height` fija y SIN hijos `display:block` con
+   margen. Antes era un <span> inline (height ignorado + padding vertical desbordado), por eso
+   el título se encimaba sobre la descripción. Ahora cada línea reserva su alto y el `gap` las
+   separa; `width:100%` + grid `stretch` mantienen las dos tarjetas idénticas en alto. */
+.lp-tab__face {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+    width: 100%; padding: 1.15rem;
+    border: 2px solid var(--line-strong); border-radius: var(--radius-sm);
+    background: var(--crema); transition: border-color .18s, background .18s, box-shadow .18s;
+}
+.lp-tab__title { color: var(--guinda-900); font-size: 15px; font-weight: 700; }
+.lp-tab__desc { color: var(--muted); font-size: 12px; line-height: 1.4; }
+.lp-tab:hover .lp-tab__face { background: #fff; }
+.lp-tab input:checked + .lp-tab__face {
+    border-color: var(--guinda); background: var(--guinda-soft);
+    box-shadow: inset 0 0 0 1px var(--guinda);
+}
+.lp-tab input:focus-visible + .lp-tab__face { outline: 3px solid var(--dorado); outline-offset: 2px; }
+
+.lp-field { position: relative; }
+.lp-field input {
+    width: 100%; border: 2px solid var(--line-strong); border-radius: var(--radius-sm);
+    padding: 14px 48px 14px 16px; font: inherit; font-size: 15px; color: var(--ink);
+    background: #fff; transition: border-color .18s, box-shadow .18s;
+}
+.lp-field input::placeholder { color: #a7968d; }
+.lp-field input:focus { outline: none; border-color: var(--dorado); box-shadow: 0 0 0 4px rgba(188, 149, 92, .18); }
+.lp-field__ic { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--dorado-600); pointer-events: none; }
+.lp-field__ic svg { width: 22px; height: 22px; }
+.lp-status { min-height: 18px; margin: 10px 2px 0; font-size: 12.5px; color: var(--muted); font-family: var(--mono); }
+
+/* ----------------------------------------------------------------- Promo carousel */
+.lp-promo { margin-top: 2rem; position: relative; }
+.lp-promo__track {
+    display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; padding-bottom: 4px; scrollbar-width: none;
+}
+.lp-promo__track::-webkit-scrollbar { display: none; }
+.lp-promo__slide {
+    scroll-snap-align: start; flex: 0 0 100%; min-width: 0;
+    display: flex; align-items: center; gap: 18px;
+    padding: 20px 22px; border-radius: var(--radius);
+    color: #fff; background: linear-gradient(115deg, var(--guinda-900), var(--guinda) 70%);
+    position: relative; overflow: hidden;
+}
+.lp-promo__slide::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: var(--greca); background-size: 80px 80px; opacity: .14; mix-blend-mode: screen;
+}
+.lp-promo__tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    background: var(--dorado); color: var(--guinda-900); padding: 5px 10px; border-radius: 6px;
+    font-weight: 700; flex: 0 0 auto; align-self: flex-start;
+}
+.lp-promo__txt h3 { margin: 0 0 3px; font-size: 17px; font-weight: 700; }
+.lp-promo__txt p { margin: 0; font-size: 13.5px; color: rgba(255, 255, 255, .85); }
+.lp-promo__dots { display: flex; gap: 7px; justify-content: center; margin-top: 12px; }
+.lp-promo__dot {
+    width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0; cursor: pointer;
+    background: var(--line-strong); transition: background .2s, transform .2s;
+}
+.lp-promo__dot[aria-current="true"] { background: var(--guinda); transform: scale(1.25); }
+
+/* ----------------------------------------------------------------- Aside enlaces */
+.lp-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 70px; }
+.lp-panel {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+}
+.lp-panel__h {
+    font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+    color: var(--guinda-900); padding: 14px 18px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px;
+}
+.lp-panel__h::before { content: ""; width: 6px; height: 16px; border-radius: 3px; background: var(--dorado); }
+.lp-links { list-style: none; margin: 0; padding: 6px; }
+.lp-links a {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 12px; border-radius: 10px; font-weight: 600; font-size: 14px; color: var(--ink);
+    transition: background .16s, color .16s, padding-left .16s;
+}
+.lp-links a:hover { background: var(--guinda-soft); color: var(--guinda); padding-left: 16px; }
+.lp-links a span.arrow { color: var(--dorado-600); transition: transform .16s; }
+.lp-links a:hover span.arrow { transform: translateX(3px); }
+
+/* ----------------------------------------------------------------- Map + feed */
+.lp-territory { padding: 0 0 2.5rem; }
+/* `stretch` (no `start`) hace que el mapa y las convocatorias sean gemelos en alto.
+   `min-height` fija la talla de la fila; el mapa, como hijo flex con `flex:1`, llena
+   todo el alto disponible de su tarjeta → adiós al mapa recortado. */
+.lp-map-grid { display: grid; grid-template-columns: 1.9fr 1fr; gap: 22px; align-items: stretch; }
+
+.lp-map-card { display: flex; flex-direction: column; min-height: 540px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+.lp-map-card__bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 13px 18px; border-bottom: 1px solid var(--line); background: var(--crema);
+}
+.lp-map-card__bar .lp-eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.lp-legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink); font-weight: 600; }
+.lp-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; border: 1.5px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+.lp-legend i.prog { background: var(--guinda); }
+.lp-legend i.evt { background: var(--dorado-600); }
+#lp-map { flex: 1 1 auto; width: 100%; min-height: 420px; background: #e8e2d6; z-index: 0; }
+
+/* Feed de convocatorias de última hora */
+.lp-feed { display: flex; flex-direction: column; }
+.lp-feed__h {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    padding: 13px 18px; border-bottom: 1px solid var(--line); background: var(--crema);
+}
+.lp-feed__h strong { font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--guinda-900); }
+.lp-feed__h small { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.lp-feed__list { flex: 1 1 auto; list-style: none; margin: 0; padding: 12px; display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow-y: auto; }
+.lp-conv {
+    display: block; padding: 14px 15px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--paper); border-left: 4px solid var(--dorado);
+    transition: transform .18s var(--tap), box-shadow .18s, border-left-color .18s;
+}
+.lp-conv:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-left-color: var(--guinda); }
+.lp-conv__kind { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--dorado-600); }
+.lp-conv__title { margin: 4px 0 6px; font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+.lp-conv__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.lp-conv__loc { display: inline-flex; align-items: center; gap: 5px; }
+.lp-deadline { font-family: var(--mono); font-weight: 600; font-size: 11px; padding: 3px 8px; border-radius: 999px; }
+.lp-deadline--soon { color: var(--soon); background: rgba(181, 112, 26, .12); }
+.lp-deadline--ok { color: var(--ok); background: rgba(46, 125, 84, .12); }
+.lp-deadline--open { color: var(--guinda); background: var(--guinda-soft); }
+.lp-feed__empty { padding: 24px 18px; color: var(--muted); font-size: 13px; }
+
+/* ----------------------------------------------------------------- Descuentos grid */
+.lp-discounts { padding: 8px 0 40px; }
+.lp-discounts.is-hidden, .lp-territory.is-hidden { display: none; }
+.lp-discounts__h { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--guinda-900); margin: 0 0 16px; }
+.lp-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+.lp-card {
+    display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;
+    transition: transform .18s var(--tap), box-shadow .18s;
+}
+.lp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.lp-card__top { display: flex; gap: 14px; padding: 18px; align-items: flex-start; }
+.lp-card__logo {
+    width: 58px; height: 58px; flex: 0 0 auto; border-radius: 12px; overflow: hidden;
+    display: grid; place-items: center; font-size: 1.5rem; font-weight: 800;
+    color: var(--guinda); background: var(--guinda-soft);
+}
+.lp-card__logo img { width: 100%; height: 100%; object-fit: contain; }
+.lp-card__co { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--dorado-600); font-weight: 700; }
+.lp-card__name { margin: 3px 0 4px; font-size: 16px; font-weight: 700; color: var(--ink); }
+.lp-card__desc { margin: 0; font-size: 13px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lp-card__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.lp-badge { font-weight: 700; font-size: 11px; padding: 3px 9px; border-radius: 999px; }
+.lp-badge--on { color: var(--ok); background: rgba(46, 125, 84, .12); }
+.lp-badge--off { color: var(--muted); background: rgba(132, 112, 105, .12); }
+
+/* ----------------------------------------------------------------- Footer */
+.lp-foot { background: var(--guinda-900); color: rgba(255, 255, 255, .82); margin-top: 8px; border-top: 3px solid var(--dorado); }
+.lp-foot__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 28px; padding: 40px 0 28px; }
+.lp-foot h4 { color: #fff; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 14px; }
+.lp-foot ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.lp-foot a { font-size: 13.5px; color: rgba(255, 255, 255, .78); transition: color .16s, padding-left .16s; }
+.lp-foot a:hover { color: var(--dorado-300); padding-left: 4px; }
+.lp-foot__brand p { font-size: 13px; line-height: 1.6; max-width: 36ch; color: rgba(255, 255, 255, .72); }
+.lp-foot__brand strong { color: #fff; display: block; font-size: 15px; margin-bottom: 8px; font-family: var(--display); }
+.lp-foot__bar { border-top: 1px solid rgba(255, 255, 255, .14); padding: 16px 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; color: rgba(255, 255, 255, .6); }
+
+/* ----------------------------------------------------------------- Responsive */
+@media (max-width: 1040px) {
+    .lp-grid { grid-template-columns: 1fr; }
+    .lp-aside { position: static; flex-direction: row; flex-wrap: wrap; }
+    .lp-aside .lp-panel { flex: 1 1 260px; }
+    .lp-map-grid { grid-template-columns: 1fr; }
+    /* Apiladas: cada tarjeta toma su alto natural; el mapa recibe un alto explícito. */
+    .lp-map-card { min-height: 0; }
+    #lp-map { flex: 0 0 auto; height: 380px; }
+    .lp-feed__list { max-height: 520px; }
+}
+@media (max-width: 760px) {
+    .lp-foot__grid { grid-template-columns: 1fr 1fr; gap: 22px; }
+    .lp-head__tag { display: none; }
+}
+@media (max-width: 520px) {
+    .lp-tabs { grid-template-columns: 1fr; }
+    .lp-foot__grid { grid-template-columns: 1fr; }
+    .lp-fed__links { display: none; }
+    .lp-promo__slide { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+/* ============================================================================
+   RWD unificado · Landing pública. La rejilla principal y el mapa+feed ya pasan
+   a 1 columna ≤1040px; aquí cerramos el breakpoint móvil (≤768px): pestañas a
+   ancho completo, campo sin auto-zoom y mapa proporcional. Unidades rem/vh.
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Pestañas del buscador apiladas a ancho completo (más fáciles de tocar). */
+    .lp-tabs { grid-template-columns: 1fr; }
+
+    /* 1rem = 16px: sin zoom automático de iOS al enfocar el buscador. */
+    .lp-field input { font-size: 1rem; }
+
+    /* El mapa ocupa una fracción del alto visible en lugar de un alto fijo. */
+    #lp-map { flex: 0 0 auto; height: 55vh; min-height: 18rem; }
+
+    /* Avisos: el carrusel reduce su densidad y los botones quedan al pulgar. */
+    .lp-promo__slide { padding: 1rem 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lp *, .lp *::before, .lp *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

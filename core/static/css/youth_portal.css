@@ -234,3 +234,32 @@ body.ymodal-open { overflow: hidden; }
 @media (max-width: 480px) {
     .ycards { grid-template-columns: 1fr; }
 }
+
+/* ============================================================================
+   RWD unificado · Portal Joven. El Sidebar guinda ya colapsa a menú off-canvas
+   (hamburguesa #navToggle + scrim) en admin_dashboard.css ≤860px; aquí afinamos
+   el contenido. Unidades relativas; identidad visual intacta.
+   ========================================================================== */
+
+/* Tabletas (769–1024px): tarjetas en 2 columnas. */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .ycards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Móvil (≤768px): una columna, campos sin auto-zoom y mapa proporcional al alto. */
+@media (max-width: 768px) {
+    .ycards { grid-template-columns: 1fr; }
+
+    /* 1rem = 16px en todo lo que reciba foco: sin zoom involuntario en iOS. */
+    .topbar__search-input,
+    .ytest__qinput textarea,
+    .ytest__qinput label,
+    .ytest__qtext { font-size: 1rem; }
+
+    /* El mapa baja a una fracción del alto visible y deja los botones al alcance. */
+    .ymap { height: 55vh; min-height: 18rem; }
+
+    /* Acciones de encuesta a ancho completo (pulgar). */
+    .ytest__actions { flex-direction: column-reverse; align-items: stretch; }
+    .ytest__actions .btn-primary, .ytest__actions .btn-ghost { width: 100%; justify-content: center; }
+}

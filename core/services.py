@@ -115,6 +115,37 @@ def search_descuentos(q=""):
     return results
 
 
+def destacados_convocatorias(limit=6):
+    """Feed lateral de la landing: programas y eventos vigentes con cierre más próximo primero.
+
+    Mezcla ambos pilares y ordena por fecha de fin ascendente (la convocatoria que cierra antes
+    encabeza). Las vigencias abiertas (sin `end_date`) van al final. Cada entrada trae los días
+    restantes para que la plantilla pinte la urgencia ('Cierra en N días')."""
+    today = timezone.localdate()
+    vigente = Q(end_date__gte=today) | Q(end_date__isnull=True)
+
+    rows = []
+    for kind, qs in (
+        ("Programa", Program.objects.select_related("state", "municipality").filter(vigente)),
+        ("Evento", Event.objects.select_related("state", "municipality").filter(vigente)),
+    ):
+        for obj in qs[:RESULT_LIMIT]:
+            location = obj.municipality.name if obj.municipality else (
+                obj.state.name.title() if obj.state else "Nacional")
+            rows.append({
+                "id": obj.id,
+                "kind": kind,
+                "name": obj.name,
+                "location": location,
+                "end_date": obj.end_date.strftime("%d/%m/%Y") if obj.end_date else None,
+                "days_left": (obj.end_date - today).days if obj.end_date else None,
+            })
+
+    # Cierre más próximo primero; las vigencias abiertas (days_left None) al final.
+    rows.sort(key=lambda r: (r["days_left"] is None, r["days_left"] if r["days_left"] is not None else 0))
+    return rows[:limit]
+
+
 # ============================================================================
 # Geolocalización por IP (portal de jóvenes)
 # ============================================================================

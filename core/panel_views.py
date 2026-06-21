@@ -266,6 +266,47 @@ class SesionDetalleView(PanelAccessMixin, DetailView):
         return ctx
 
 
+class JovenExpedienteView(PanelAccessMixin, DetailView):
+    """Expediente Digital de un joven en **solo lectura** para administradores.
+
+    Aislamiento territorial (defensa IDOR): `get_queryset()` parte de los jóvenes ya acotados a
+    la jurisdicción del administrador (`scoped_jovenes`). Si un ESTATAL solicita el `pk` de un
+    joven de otro estado, el objeto no está en el queryset → 404 (no se filtra el recurso ni se
+    confirma su existencia). El SUPER ve a cualquiera. No expone formularios de edición.
+    """
+
+    template_name = "panel/joven_expediente.html"
+    context_object_name = "joven"
+    active_nav = "encuestas"
+
+    def get_queryset(self):
+        return self.scoped_jovenes().select_related("assigned_state")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        from records.views import build_saved_card  # presentación compartida con el portal joven
+
+        joven = self.object
+        record = getattr(joven, "digital_record", None)
+
+        saved_cards = []
+        if record:
+            saved_qs = record.saved_items.select_related(
+                "program__state", "program__municipality",
+                "event__state", "event__municipality", "event__city",
+                "promotion__state", "promotion__municipality", "promotion__city",
+            )
+            saved_cards = [c for c in (build_saved_card(i) for i in saved_qs) if c]
+        ctx.update({
+            "record": record,
+            "youth_profile": getattr(joven, "youth_profile", None),
+            "saved_cards": saved_cards,
+            "historial": TestSession.objects.filter(user=joven).select_related("test"),
+            "searches": record.searches.all()[:20] if record else [],
+        })
+        return ctx
+
+
 # ============================================================================
 # Altas y ediciones (CreateView / UpdateView) con aislamiento territorial
 # ============================================================================

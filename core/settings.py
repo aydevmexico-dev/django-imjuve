@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'programs',
     'promotions',
     'tests',
+    'records',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'

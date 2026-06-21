@@ -12,6 +12,7 @@ urlpatterns = [
     path("descuentos/", views.DescuentosView.as_view(), name="descuentos"),
     path("encuestas/", views.EncuestasView.as_view(), name="encuestas"),
     path("encuestas/sesiones/<int:pk>/", views.SesionDetalleView.as_view(), name="sesion_detalle"),
+    path("jovenes/<int:pk>/expediente/", views.JovenExpedienteView.as_view(), name="joven_expediente"),
 
     # --- Altas y ediciones (formularios con aislamiento territorial) ---
     path("programas/programa/crear/", views.ProgramCreateView.as_view(), name="programa_crear"),

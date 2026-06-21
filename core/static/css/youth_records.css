@@ -1,0 +1,216 @@
+/* ============================================================================
+   IMJUVE · Expediente Digital — estilos del portafolio del joven.
+   Reusa los tokens de admin_dashboard.css (--guinda #B30F34, --cream, --dorado).
+   Sin estilos inline en las plantillas (regla del proyecto).
+   ========================================================================== */
+
+/* ----------------------------- Tarjeta contenedora ----------------------- */
+/* `.card` no trae padding propio (overflow:hidden). Damos a la franja de pestañas y a los
+   paneles un inset horizontal IDÉNTICO (22px) para que el borde de las pestañas, la cabecera
+   del perfil y la rejilla de datos compartan exactamente el mismo eje izquierdo y derecho. */
+
+/* ----------------------------- Pestañas internas ------------------------- */
+.rtabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 14px 22px 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--line, #E8DDCF);
+}
+
+.rtab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin-bottom: -1px;            /* el subrayado activo cae justo sobre el divisor */
+    border: none;
+    background: transparent;
+    color: var(--muted, #847069);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 3px solid transparent;
+    transition: color .18s, background .18s, border-color .18s;
+}
+
+.rtab:hover { color: var(--guinda, #B30F34); background: var(--guinda-soft, rgba(179, 15, 52, .07)); }
+
+.rtab.is-active {
+    color: var(--guinda, #B30F34);
+    border-bottom-color: var(--guinda, #B30F34);
+}
+
+.rtab .ic { font-size: 1.05rem; }
+
+/* ----------------------------- Paneles ----------------------------------- */
+.rpanel { padding: 24px 22px; animation: rpanel-in .22s ease both; }
+.rpanel[hidden] { display: none; }
+
+@keyframes rpanel-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.rsection__title {
+    font-size: 1.05rem;
+    color: var(--guinda-900, #6B0A20);
+    margin: 22px 0 12px;
+}
+.rpanel > .rsection__title:first-child { margin-top: 4px; }
+
+/* ----------------------------- Mi Perfil --------------------------------- */
+.rprofile {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.rprofile__avatar {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(150deg, var(--guinda, #B30F34), var(--guinda-900, #6B0A20));
+}
+
+.rprofile__id { min-width: 0; }
+.rprofile__id h2 { margin: 0; color: var(--guinda-900, #6B0A20); }
+.rprofile__role { margin: 2px 0 0; color: var(--muted, #847069); font-size: .9rem; }
+
+/* Rejilla balanceada: 6 campos fijos -> 3 columnas (2 filas exactas) en escritorio.
+   Columnas explícitas (no auto-fit) para evitar tanto los huecos muertos a la derecha
+   como la tarjeta solitaria estirada en la última fila. `minmax(0,1fr)` deja que el texto
+   largo se ajuste sin desbordar la celda. */
+.rprofile__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 14px;
+    margin: 0;
+}
+.rprofile__grid > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 66px;            /* misma altura física tengan o no dato ("—") */
+    background: var(--paper, #FFFDF9);
+    border: 1px solid var(--line, #E8DDCF);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+.rprofile__grid dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted, #847069); }
+.rprofile__grid dd { margin: 4px 0 0; font-weight: 600; color: #2A1A1D; overflow-wrap: anywhere; }
+
+@media (max-width: 960px) {
+    .rprofile__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ----------------------------- Tarjetas guardadas ------------------------ */
+.rcard { display: flex; flex-direction: column; }
+.rcard__actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px 14px;
+    margin-top: auto;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    font-size: .88rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background .18s, color .18s, border-color .18s;
+}
+.btn--primary { background: var(--guinda, #B30F34); color: #fff; }
+.btn--primary:hover { background: var(--guinda-900, #6B0A20); }
+.btn--ghost { background: var(--paper, #FFFDF9); color: var(--guinda, #B30F34); border-color: var(--line-strong, #DCCDB8); }
+.btn--ghost:hover { background: var(--guinda-soft, rgba(179, 15, 52, .07)); }
+.btn--danger-ghost { background: transparent; color: #9b1c2e; border-color: var(--line-strong, #DCCDB8); }
+.btn--danger-ghost:hover { background: rgba(155, 28, 46, .08); border-color: #9b1c2e; }
+
+/* ----------------------------- Listas (encuestas/guardados admin) -------- */
+.rlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.rlist__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--paper, #FFFDF9);
+    border: 1px solid var(--line, #E8DDCF);
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+.rlist__icon {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: var(--guinda-soft, rgba(179, 15, 52, .07));
+    color: var(--guinda, #B30F34);
+    font-size: 1.2rem;
+}
+.rlist__info { flex: 1 1 auto; min-width: 0; }
+.rlist__info strong { display: block; color: #2A1A1D; }
+.rlist__info small { color: var(--muted, #847069); }
+
+/* ----------------------------- Búsquedas recientes ----------------------- */
+.rsearch { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rsearch__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--paper, #FFFDF9);
+    border: 1px solid var(--line, #E8DDCF);
+}
+.rsearch__item .ic { color: var(--dorado-600, #A67C45); }
+.rsearch__q { flex: 1 1 auto; font-weight: 600; color: #2A1A1D; }
+.rsearch__item time { color: var(--muted, #847069); font-size: .82rem; white-space: nowrap; }
+
+/* ----------------------------- Botón Guardar (detalle) ------------------- */
+.btn-fav {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--guinda, #B30F34);
+    background: var(--paper, #FFFDF9);
+    border: 1px solid var(--guinda, #B30F34);
+    transition: background .18s, color .18s, opacity .18s;
+}
+.btn-fav:hover { background: var(--guinda-soft, rgba(179, 15, 52, .07)); }
+.btn-fav.is-saved { background: var(--guinda, #B30F34); color: #fff; }
+.btn-fav[disabled] { opacity: .6; cursor: progress; }
+
+.empty { color: var(--muted, #847069); padding: 12px 0; }
+
+@media (max-width: 560px) {
+    .rtabs { padding: 12px 14px 0; }
+    .rpanel { padding: 18px 16px; }
+    .rprofile__grid { grid-template-columns: 1fr; }
+    .rcard__actions { flex-direction: column; }
+    .rlist__item { flex-wrap: wrap; }
+}

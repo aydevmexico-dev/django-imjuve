@@ -1,0 +1,114 @@
+{% extends 'youth/base_youth.html' %}
+{% load static %}
+
+{% block head_title %}Mi Expediente · Portal IMJUVE{% endblock %}
+{% block page_kicker %}Tu portafolio de identidad{% endblock %}
+{% block page_title %}Mi Expediente Digital{% endblock %}
+{% block search_placeholder %}Buscar en tu expediente…{% endblock %}
+
+{% block content %}
+{# Token CSRF para los POST AJAX de youth_records.js (se lee del input oculto). #}
+<form id="recordCsrf" hidden>{% csrf_token %}</form>
+
+<section class="card record" id="recordRoot">
+    <nav class="rtabs" role="tablist" aria-label="Secciones del expediente">
+        <button class="rtab is-active" role="tab" data-tab="perfil" aria-selected="true">
+            <span class="ic ic-grid" aria-hidden="true"></span> Mi Perfil
+        </button>
+        <button class="rtab" role="tab" data-tab="guardados" aria-selected="false">
+            <span class="ic ic-programas" aria-hidden="true"></span> Programas y Eventos
+        </button>
+        <button class="rtab" role="tab" data-tab="encuestas" aria-selected="false">
+            <span class="ic ic-poll" aria-hidden="true"></span> Historial de Encuestas
+        </button>
+        <button class="rtab" role="tab" data-tab="actividad" aria-selected="false">
+            <span class="ic ic-search" aria-hidden="true"></span> Actividad Reciente
+        </button>
+    </nav>
+
+    <!-- ============ MI PERFIL ============ -->
+    <div class="rpanel is-active" data-tab-panel="perfil" role="tabpanel">
+        <div class="rprofile">
+            <span class="rprofile__avatar">{{ request.user.email|first|upper }}</span>
+            <div class="rprofile__id">
+                <h2>{{ request.user.get_full_name|default:request.user.email }}</h2>
+                <p class="rprofile__role">{{ role_label }} · {{ request.user.email }}</p>
+            </div>
+        </div>
+        {% if youth_profile %}
+        <dl class="rprofile__grid">
+            <div><dt>CURP</dt><dd>{{ youth_profile.curp|default:"—" }}</dd></div>
+            <div><dt>Fecha de nacimiento</dt><dd>{{ youth_profile.birthdate|default:"—" }}</dd></div>
+            <div><dt>Teléfono</dt><dd>{{ youth_profile.phone|default:"—" }}</dd></div>
+            <div><dt>Escuela</dt><dd>{{ youth_profile.school|default:"—" }}</dd></div>
+            <div><dt>Ocupación</dt><dd>{{ youth_profile.occupation|default:"—" }}</dd></div>
+            <div><dt>Residencia</dt><dd>{{ youth_profile.residence_location|default:"—" }}</dd></div>
+        </dl>
+        {% elif is_preview %}
+        <p class="empty">Vista previa de administrador: este expediente es del joven, no tuyo.</p>
+        {% else %}
+        <p class="empty">Aún no has completado tu perfil de joven.</p>
+        {% endif %}
+    </div>
+
+    <!-- ============ PROGRAMAS Y EVENTOS / DESCUENTOS GUARDADOS ============ -->
+    <div class="rpanel" data-tab-panel="guardados" role="tabpanel" hidden>
+        <h3 class="rsection__title">Programas y eventos guardados</h3>
+        {% if saved_programas_eventos %}
+        <div class="ycards">
+            {% for c in saved_programas_eventos %}{% include 'youth/_record_card.html' with c=c %}{% endfor %}
+        </div>
+        {% else %}
+        <p class="empty">No has guardado programas ni eventos todavía.</p>
+        {% endif %}
+
+        <h3 class="rsection__title">Descuentos guardados</h3>
+        {% if saved_descuentos %}
+        <div class="ycards">
+            {% for c in saved_descuentos %}{% include 'youth/_record_card.html' with c=c %}{% endfor %}
+        </div>
+        {% else %}
+        <p class="empty">No has guardado descuentos todavía.</p>
+        {% endif %}
+    </div>
+
+    <!-- ============ HISTORIAL DE ENCUESTAS ============ -->
+    <div class="rpanel" data-tab-panel="encuestas" role="tabpanel" hidden>
+        {% if historial %}
+        <ul class="rlist">
+            {% for s in historial %}
+            <li class="rlist__item">
+                <span class="rlist__icon ic ic-poll" aria-hidden="true"></span>
+                <div class="rlist__info">
+                    <strong>{{ s.test.name }}</strong>
+                    <small>Resuelta el {{ s.completed_at|date:"d/m/Y H:i" }} · Puntuación: {{ s.score }}</small>
+                </div>
+                <a class="btn btn--ghost" href="{% url 'youth:encuesta_responder' s.test_id %}"
+                   target="_blank" rel="noopener">Ver encuesta</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty">Todavía no has resuelto ninguna encuesta.</p>
+        {% endif %}
+    </div>
+
+    <!-- ============ ACTIVIDAD RECIENTE (BÚSQUEDAS) ============ -->
+    <div class="rpanel" data-tab-panel="actividad" role="tabpanel" hidden>
+        <h3 class="rsection__title">Tus búsquedas recientes</h3>
+        {% if searches %}
+        <ul class="rsearch">
+            {% for q in searches %}
+            <li class="rsearch__item">
+                <span class="ic ic-search" aria-hidden="true"></span>
+                <span class="rsearch__q">{{ q.query }}</span>
+                <time datetime="{{ q.created_at|date:'c' }}">{{ q.created_at|date:"d/m/Y H:i" }}</time>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty">Aún no hay búsquedas registradas en tu expediente.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

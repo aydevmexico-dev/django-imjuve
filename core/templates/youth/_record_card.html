@@ -1,0 +1,30 @@
+{% comment %}
+Tarjeta de un elemento guardado del expediente. A diferencia de `_card.html` (que abre el modal),
+aquí los botones de acción abren el recurso en una pestaña nueva (target="_blank") y se añade un
+botón para des-guardar (POST AJAX manejado por youth_records.js mediante `data-fav-remove`).
+Espera `c` = dict de `MyRecordView._saved_card`.
+{% endcomment %}
+<article class="ycard rcard" data-saved-id="{{ c.saved_id }}">
+    <div class="ycard__flyer">
+        {% if c.image_url %}
+            <img src="{{ c.image_url }}" alt="Flyer de {{ c.title }}" loading="lazy">
+        {% else %}
+            <span class="ycard__ph ic {% if c.kind == 'evento' %}ic-eventos{% elif c.kind == 'descuento' %}ic-tag{% else %}ic-programas{% endif %}" aria-hidden="true"></span>
+        {% endif %}
+        <span class="ycard__kind ycard__kind--{{ c.kind }}">{{ c.kind|capfirst }}</span>
+    </div>
+    <div class="ycard__body">
+        <h3 class="ycard__title">{{ c.title }}</h3>
+        <p class="ycard__meta"><span class="ic ic-pin" aria-hidden="true"></span>{{ c.location }}</p>
+        <p class="ycard__meta"><span class="ic ic-eventos" aria-hidden="true"></span>{{ c.date_label }}</p>
+    </div>
+    <div class="rcard__actions">
+        <a class="btn btn--primary" href="{{ c.detail_url }}" target="_blank" rel="noopener">
+            {% if c.kind == 'descuento' %}Ver descuento{% else %}Ver convocatoria{% endif %}
+        </a>
+        <button type="button" class="btn btn--danger-ghost" data-fav-remove
+                data-kind="{{ c.kind }}" data-obj-id="{{ c.obj_id }}" aria-label="Quitar de guardados">
+            Quitar
+        </button>
+    </div>
+</article>

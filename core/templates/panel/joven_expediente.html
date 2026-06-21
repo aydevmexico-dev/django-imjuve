@@ -1,0 +1,89 @@
+{% extends 'panel/base_admin.html' %}
+
+{% block head_title %}Expediente de {{ joven.email }} · Panel IMJUVE{% endblock %}
+{% block page_kicker %}Expediente Digital (solo lectura){% endblock %}
+{% block page_title %}Expediente del joven{% endblock %}
+
+{% block content %}
+<a class="back" href="{% url 'panel:dashboard' %}"><span class="ic ic-back" aria-hidden="true"></span>Volver al panel</a>
+
+<section class="card session-head">
+    <div class="session-head__main">
+        <h2>{{ joven.get_full_name|default:joven.email }}</h2>
+        <p class="session-head__user"><span class="mono">{{ joven.email }}</span></p>
+    </div>
+    {% if youth_profile %}
+    <dl class="session-meta">
+        <div><dt>CURP</dt><dd class="mono">{{ youth_profile.curp|default:"—" }}</dd></div>
+        <div><dt>Nacimiento</dt><dd>{{ youth_profile.birthdate|default:"—" }}</dd></div>
+        <div><dt>Residencia</dt><dd>{{ youth_profile.residence_location|default:"—" }}</dd></div>
+    </dl>
+    {% endif %}
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Elementos guardados</h2>
+        <span class="card__hint">{{ saved_cards|length }} elemento(s)</span>
+    </header>
+    {% if saved_cards %}
+    <ul class="rlist">
+        {% for c in saved_cards %}
+        <li class="rlist__item">
+            <span class="rlist__icon ic {% if c.kind == 'evento' %}ic-eventos{% elif c.kind == 'descuento' %}ic-tag{% else %}ic-programas{% endif %}" aria-hidden="true"></span>
+            <div class="rlist__info">
+                <strong>{{ c.title }}</strong>
+                <small>{{ c.kind|capfirst }} · {{ c.location }} · {{ c.date_label }}</small>
+            </div>
+            <a class="btn btn--ghost" href="{{ c.detail_url }}" target="_blank" rel="noopener">Ver</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Este joven no ha guardado elementos.</p>
+    {% endif %}
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Historial de encuestas</h2>
+        <span class="card__hint">{{ historial|length }} sesión(es)</span>
+    </header>
+    {% if historial %}
+    <ul class="rlist">
+        {% for s in historial %}
+        <li class="rlist__item">
+            <span class="rlist__icon ic ic-poll" aria-hidden="true"></span>
+            <div class="rlist__info">
+                <strong>{{ s.test.name }}</strong>
+                <small>Resuelta el {{ s.completed_at|date:"d/m/Y H:i" }} · Puntuación: {{ s.score }}</small>
+            </div>
+            <a class="btn btn--ghost" href="{% url 'panel:sesion_detalle' s.pk %}">Ver respuestas</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Sin encuestas resueltas.</p>
+    {% endif %}
+</section>
+
+<section class="card">
+    <header class="card__head">
+        <h2>Actividad reciente</h2>
+        <span class="card__hint">Últimas búsquedas</span>
+    </header>
+    {% if searches %}
+    <ul class="rsearch">
+        {% for q in searches %}
+        <li class="rsearch__item">
+            <span class="ic ic-search" aria-hidden="true"></span>
+            <span class="rsearch__q">{{ q.query }}</span>
+            <time datetime="{{ q.created_at|date:'c' }}">{{ q.created_at|date:"d/m/Y H:i" }}</time>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">Sin búsquedas registradas.</p>
+    {% endif %}
+</section>
+{% endblock %}

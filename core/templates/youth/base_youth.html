@@ -12,9 +12,13 @@
 
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'css/youth_portal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/youth_records.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="panel youth" data-nav="{{ active_nav }}">
+<body class="panel youth" data-nav="{{ active_nav }}"
+      data-fav-url="{% url 'youth:toggle_favorito' %}"
+      data-search-log-url="{% url 'youth:log_busqueda' %}"
+      data-can-log="{% if is_preview %}0{% else %}1{% endif %}">
 
     <div class="layout">
         <!-- ===================== SIDEBAR ===================== -->
@@ -49,6 +53,9 @@
                 </a>
 
                 <p class="nav__group">Cuenta</p>
+                <a class="nav__item {% if active_nav == 'expediente' %}is-active{% endif %}" href="{% url 'youth:expediente' %}">
+                    <span class="ic ic-grid" aria-hidden="true"></span><span>Mi Expediente</span>
+                </a>
                 <a class="nav__item" href="{% url 'landing' %}">
                     <span class="ic ic-globe" aria-hidden="true"></span><span>Sitio público</span>
                 </a>
@@ -139,6 +146,7 @@
 
     <script src="{% static 'js/admin_dashboard.js' %}"></script>
     <script src="{% static 'js/youth_portal.js' %}"></script>
+    <script src="{% static 'js/youth_records.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -59,11 +59,21 @@ abrir el modal de una tarjeta, y también se incrusta en la página completa `de
     </div>
     {% endif %}
 
-    {% if detail.external_url %}
+    {% if detail.external_url or not is_preview %}
     <div class="ydetail__actions">
+        {% if detail.external_url %}
         <a class="btn-primary" href="{{ detail.external_url }}" target="_blank" rel="noopener noreferrer" data-external>
             <span class="ic ic-globe" aria-hidden="true"></span>{{ detail.external_label }}
         </a>
+        {% endif %}
+        {% if not is_preview %}
+        <button type="button" class="btn-fav{% if is_saved %} is-saved{% endif %}"
+                data-fav-toggle data-kind="{{ fav_kind }}" data-obj-id="{{ obj.pk }}"
+                aria-pressed="{% if is_saved %}true{% else %}false{% endif %}">
+            <span class="ic ic-tag" aria-hidden="true"></span>
+            <span class="btn-fav__label">{% if is_saved %}Guardado{% else %}Guardar{% endif %}</span>
+        </button>
+        {% endif %}
     </div>
     {% endif %}
 </div>

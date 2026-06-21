@@ -6,6 +6,8 @@ permitido (crea `TestSession` + `Answer`).
 
 from django.urls import path
 
+from records import views as record_views
+
 from . import youth_views as views
 
 app_name = "youth"
@@ -27,4 +29,9 @@ urlpatterns = [
 
     path("mapa/", views.MapaView.as_view(), name="mapa"),
     path("api/mapa/", views.MapaDataView.as_view(), name="mapa_data"),
+
+    # --- Expediente Digital (consulta propia + endpoints AJAX de bitácora) ---
+    path("expediente/", record_views.MyRecordView.as_view(), name="expediente"),
+    path("expediente/favorito/", record_views.ToggleFavoriteView.as_view(), name="toggle_favorito"),
+    path("expediente/busqueda/", record_views.LogSearchView.as_view(), name="log_busqueda"),
 ]

@@ -319,9 +319,26 @@ class _YouthDetailBase(YouthAccessMixin, DetailView):
             return ["youth/_detail_modal.html"]
         return ["youth/detalle.html"]
 
+    # kind (en minúsculas, como en records.SAVED_KINDS) -> campo FK en SavedItem.
+    _fav_field = {"programa": "program", "evento": "event", "descuento": "promotion"}
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["detail"] = self.build_detail(self.object)
+        detail = self.build_detail(self.object)
+        ctx["detail"] = detail
+
+        # Estado inicial del botón "Guardar" (solo el joven tiene expediente).
+        fav_kind = detail["kind"].lower()
+        ctx["fav_kind"] = fav_kind
+        ctx["is_saved"] = False
+        user = self.request.user
+        if user.role == CustomUser.Role.GENERAL:
+            from records.models import SavedItem  # import local: evita ciclo en el arranque
+            field = self._fav_field.get(fav_kind)
+            if field:
+                ctx["is_saved"] = SavedItem.objects.filter(
+                    record__user=user, **{field: self.object}
+                ).exists()
         return ctx
 
 
